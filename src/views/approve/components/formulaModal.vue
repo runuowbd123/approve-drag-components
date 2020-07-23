@@ -1,50 +1,57 @@
 <template>
   <a-modal
-      :maskClosable="false"
-      title="计算公式设置"
-      :visible="formulaModalShow"
-      @ok="onOk"
-      @cancel="onCancel"
-    >
-      <a-textarea
-        readonly
-        :value="textarea"
-        class="textarea"
-      />
-      <div class="tip">
-        仅有数字输入框和金额控件可以用于计算
+    :maskClosable="false"
+    title="计算公式设置"
+    :visible="formulaModalShow"
+    @ok="onOk"
+    @cancel="onCancel"
+    style="positon:relative"
+  >
+    <a-icon
+      type="arrow-left"
+      style="font-size: 20px;position: absolute;right: 80px;top:150px;z-index: 999;cursor: pointer"
+      @click="back()"
+    />
+    <div
+      style="color: red;position: absolute;right: 40px;top:150px;z-index: 999;cursor: pointer"
+      @click="clear()"
+    >清空</div>
+    <a-textarea readonly :value="textarea" class="textarea" />
+    <div class="tip">仅有数字输入框和金额控件可以用于计算</div>
+    <div class="formula-components">
+      <div class="title">可选控件</div>
+      <div class="content">
+        <div
+          class="content-item"
+          v-for="(item, index) in toolList"
+          :key="index"
+          @click="changeFormula(item)"
+        >{{item.label}}</div>
       </div>
-      <div class="formula-components">
-        <div class="title">
-          可选控件
-        </div>
-        <div class="content">
-          <div class="content-item" v-for="(item, index) in toolList" :key="index" @click="changeFormula(item)">
-            {{item.label}}
-          </div>
-        </div>
+    </div>
+    <div class="formula-components">
+      <div class="title">符号</div>
+      <div class="content">
+        <div
+          class="content-item"
+          v-for="(item, index) in symbolList"
+          :key="index"
+          @click="changeFormula(item)"
+        >{{item.label}}</div>
       </div>
-      <div class="formula-components">
-        <div class="title">
-          符号
-        </div>
-        <div class="content">
-          <div class="content-item" v-for="(item, index) in symbolList" :key="index" @click="changeFormula(item)">
-            {{item.label}}
-          </div>
-        </div>
+    </div>
+    <div class="formula-components">
+      <div class="title">数字</div>
+      <div class="content">
+        <div
+          class="content-item"
+          v-for="(item, index) in numberList"
+          :key="index"
+          @click="changeFormula(item)"
+        >{{item.label}}</div>
       </div>
-      <div class="formula-components">
-        <div class="title">
-          数字
-        </div>
-        <div class="content">
-          <div class="content-item" v-for="(item, index) in numberList" :key="index" @click="changeFormula(item)">
-            {{item.label}}
-          </div>
-        </div>
-      </div>
-    </a-modal>
+    </div>
+  </a-modal>
 </template>
 
 <script>
@@ -58,84 +65,114 @@ export default {
     toolList: {
       type: Array,
       default: () => [],
-      required: true,
+      required: true
     },
     defaultFormulaList: {
       type: Array,
       default: () => [],
-      required: false,
-    },
+      required: false
+    }
   },
   data() {
     return {
       formulaList: [], // textarea中显示的计算公式
-      symbolList: [{label: '+'},{label: '-'},{label: '×'},{label: '÷'},{label: '('},{label: ')'},], // 符号数组
-      numberList: [{label: '1'},{label: '1'},{label: '2'},{label: '3'},{label: '4'},{label: '5'},{label: '6'},{label: '7'},{label: '8'},{label: '9'},{label: '.'},] 
+      symbolList: [
+        { label: "+" },
+        { label: "-" },
+        { label: "×" },
+        { label: "÷" },
+        { label: "(" },
+        { label: ")" }
+      ], // 符号数组
+      numberList: [
+        { label: "1" },
+        { label: "1" },
+        { label: "2" },
+        { label: "3" },
+        { label: "4" },
+        { label: "5" },
+        { label: "6" },
+        { label: "7" },
+        { label: "8" },
+        { label: "9" },
+        { label: "." }
+      ]
     };
   },
   computed: {
     textarea() {
-      let text = '计算结果 = '
-      this.formulaList.forEach((item) => {
-        text += item.label
-        text += ' '
-      })
-      return text
+      let text = "计算结果 = ";
+      this.formulaList.forEach(item => {
+        text += item.label;
+        text += " ";
+      });
+      return text;
     }
   },
   created() {
-    console.log('可选控件',this.toolList,'默认的计算公式' ,this.defaultFormulaList);
-    this.formulaList = this.defaultFormulaList;
+    console.log(
+      "可选控件",
+      this.toolList,
+      "默认的计算公式",
+      this.defaultFormulaList
+    );
+    this.formulaList = JSON.parse(JSON.stringify(this.defaultFormulaList));
   },
   methods: {
     changeFormula(targetObj) {
-      this.formulaList.push(targetObj)
+      this.formulaList.push(targetObj);
+    },
+    back() {
+      this.formulaList.pop()
+    },
+    clear() {
+      this.formulaList = [];
     },
     onOk() {
-      if(this.toolList && this.toolList.length > 0) {
-        this.$emit('changeComponentFormula', this.formulaList)
-        this.formulaList = []
+      if (this.toolList && this.toolList.length > 0) {
+        this.$emit("changeComponentFormula", this.formulaList);
+        this.formulaList = [];
       } else {
-        this.$message.error('无可选控件无法设置公式，请先添加可选控件')
+        this.$message.error("无可选控件无法设置公式，请先添加可选控件");
       }
     },
     onCancel() {
-      this.$emit('closeFormulaModal');
-      this.formulaList = []
+      this.$emit("closeFormulaModal");
+      this.formulaList = [];
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-.textarea{
+.textarea {
   height: 100px;
   resize: none;
 }
-.tip{
+.tip {
   width: 100%;
   height: 30px;
   line-height: 30px;
   border: 1px solid rgb(0, 153, 204);
   border-radius: 5px;
-  background: rgb(215,239,247);
+  background: rgb(215, 239, 247);
   text-align: center;
   margin: 20px 0;
 }
-.formula-components{
+.formula-components {
   width: 100%;
   display: flex;
   margin-bottom: 10px;
-  .title{
+  .title {
     width: 65px;
     margin-top: 5px;
   }
-  .content{
+  .content {
     flex: 1;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    .content-item{
+    .content-item {
       min-width: 45px;
       text-align: center;
       border: 1px solid #ccc;

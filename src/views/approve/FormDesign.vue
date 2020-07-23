@@ -1,5 +1,6 @@
 <template>
   <div class="row">
+    <!-- 左边组件部分 -->
     <div class="component-list">
       <a-tabs v-model="activeTab">
         <a-tab-pane key="1" tab="基础控件">
@@ -35,10 +36,44 @@
               :key="item.id"
             >{{ item.name }}</div>
           </draggable>
+          <!-- 选项 -->
+          <div class="title">选项</div>
+          <draggable
+            class="list-group"
+            :list="components.option"
+            :group="{ name: 'comp', pull: 'clone', put: false }"
+            @change="log"
+            :options="{sort: false}"
+            filter=".undraggable"
+          >
+            <div
+              class="list-group-item"
+              v-for="item in components.option"
+              :key="item.id"
+            >{{ item.name }}</div>
+          </draggable>
+          <!-- 日期 -->
+          <div class="title">日期</div>
+          <draggable
+            class="list-group"
+            :list="components.date"
+            :group="{ name: 'comp', pull: 'clone', put: false }"
+            @change="log"
+            :options="{sort: false}"
+            filter=".undraggable"
+          >
+            <div
+              class="list-group-item"
+              v-for="item in components.date"
+              :key="item.id"
+            >{{ item.name }}</div>
+          </draggable>
         </a-tab-pane>
         <a-tab-pane key="2" tab="控件组">Content of Tab Pane 2</a-tab-pane>
       </a-tabs>
     </div>
+
+    <!-- 中间手机部分 -->
     <div class="mobile">
       <draggable
         :list="componentList"
@@ -101,6 +136,57 @@
           <template v-if="item.type==='formula'">
             <van-field :label="item.label" :value="'自动计算'" :required="item.required" />
           </template>
+          <!-- 单选框 或者 多选框 或者 日期 -->
+          <template
+            v-if="item.type==='radio' || item.type === 'checkbox' || item.type === 'datepicker'"
+          >
+            <div
+              style="padding: 15px 20px;background: #fff;display: flex;justify-content: space-between"
+            >
+              <div style="color: #000;width: 6.2em;word-break:break-all;position:relative">
+                {{item.label}}
+                <div style="position:absolute;top: 0;left: -10px;color: red" v-if="item.required">*</div>
+              </div>
+              <div style="display: flex;align-items: center">
+                <div
+                  style="color: rgb(153, 153, 153);max-width: 150px;word-break:break-all"
+                >{{item.placeholder}}</div>
+                <van-icon name="arrow" style="margin-left: 5px" />
+              </div>
+            </div>
+          </template>
+          <!-- 日期区间 -->
+          <template v-if="item.type==='datepickerRange'">
+            <div class="date-range">
+              <div class="date-range-title">
+                {{item.label1}}
+                <div class="red" v-if="item.required">*</div>
+              </div>
+              <div class="date-range-content">
+                <div class="date-range-content-word">{{item.placeholder}}</div>
+                <van-icon name="arrow" style="margin-left: 5px" />
+              </div>
+            </div>
+            <div class="date-range">
+              <div class="date-range-title">
+                {{item.label2}}
+                <div class="red" v-if="item.required">*</div>
+              </div>
+              <div class="date-range-content">
+                <div class="date-range-content-word">{{item.placeholder}}</div>
+                <van-icon name="arrow" style="margin-left: 5px" />
+              </div>
+            </div>
+            <div class="date-range" v-if="item.autoCalculate">
+              <div class="date-range-title">
+                {{item.timeLabel}}
+              </div>
+              <div class="date-range-content">
+                <div class="date-range-content-word">自动计算</div>
+                <van-icon name="arrow" style="margin-left: 5px" v-show="false"/>
+              </div>
+            </div>
+          </template>
 
           <a-icon
             type="close-circle"
@@ -112,11 +198,12 @@
       </draggable>
     </div>
 
+    <!-- 右侧组件详情部分 -->
     <div class="component-detail">
       <div class="title">{{clickItem.name}}</div>
-      <!-- 单行输入框,多行输入框,数字输入框 -->
+      <!-- 单行输入框,多行输入框,数字输入框, 单选框，多选框, 日期 -->
       <div
-        v-if="clickItem.type === 'input' || clickItem.type === 'textArea' || clickItem.type === 'number' || clickItem.type === 'money'"
+        v-if="clickItem.type === 'input' || clickItem.type === 'textArea' || clickItem.type === 'number' || clickItem.type === 'money' || clickItem.type === 'radio' || clickItem.type === 'checkbox' || clickItem.type === 'datepicker'"
         class="component-detail-item"
       >
         <div class="component-detail-item-title">
@@ -142,6 +229,7 @@
           />
         </div>
         <template v-if="clickItem.type === 'number'">
+          <!-- 数字输入框多一个单位配置 -->
           <div class="component-detail-item-title">
             单位
             <span class="gray">最多20个字</span>
@@ -154,7 +242,51 @@
             />
           </div>
         </template>
-        <div class="component-detail-item-title">验证</div>
+        <template v-if="clickItem.type === 'radio' || clickItem.type === 'checkbox'">
+          <!-- 单选框和多选框多个选项配置 -->
+          <div class="component-detail-item-title">
+            选项
+            <span class="gray">每项最多20个字，最多20项</span>
+          </div>
+          <div class="component-detail-item-content">
+            <draggable class="list-group" :list="clickItem.optionList" :group="{ name: 'comp'}">
+              <div
+                v-for="(item,index) in clickItem.optionList"
+                :key="index"
+                style="display: flex;align-items:center;cursor: move;margin-top: 10px"
+              >
+                <a-icon type="menu" style="margin-right: 5px" />
+                <a-input
+                  v-model="item.name"
+                  style="width: 200px;margin-right: 10px;"
+                  :maxLength="20"
+                />
+                <a-icon
+                  type="plus-circle"
+                  style="margin-right: 5px;color: rgb(51,153,51);font-size: 16px';cursor: pointer"
+                  v-if="clickItem.optionList.length - 1 === index && clickItem.optionList.length < 20"
+                  @click="plusOption(clickItem.optionList)"
+                />
+                <a-icon
+                  type="minus-circle"
+                  style="color: red;font-size: 14px;cursor: pointer"
+                  v-if="clickItem.optionList.length !== 1"
+                  @click="deleteOption(clickItem.optionList, index)"
+                />
+              </div>
+            </draggable>
+          </div>
+        </template>
+        <template v-if="clickItem.type === 'datepicker'">
+          <div class="component-detail-item-title">日期类型</div>
+          <div class="component-detail-item-content">
+            <a-radio-group v-model="clickItem.format" style="display: flex;flex-direction: column">
+              <a-radio value="YYYY-MM-DD">年-月-日</a-radio>
+              <a-radio value="YYYY-MM-DD HH:mm">年-月-日 时:分</a-radio>
+            </a-radio-group>
+          </div>
+        </template>
+        <div class="component-detail-item-title">验证（勾选后可作为流程条件）</div>
         <a-checkbox :checked="clickItem.required" @change="changeComponentE('required', $event)">必填</a-checkbox>
       </div>
 
@@ -194,11 +326,65 @@
             <span v-for="(it,ind) in clickItem.formulaList" :key="ind">{{it.label}}{{" "}}</span>
           </div>
         </div>
-        <div class="component-detail-item-title">验证</div>
+        <div class="component-detail-item-title">验证（勾选后可作为流程条件）</div>
         <a-checkbox :checked="clickItem.required" @change="changeComponentE('required', $event)">必填</a-checkbox>
       </div>
+
+      <!-- 日期区间 -->
+      <div v-if="clickItem.type === 'datepickerRange'" class="component-detail-item">
+        <div class="component-detail-item-title">
+          标题1
+          <span class="gray">最多20个字</span>
+        </div>
+        <div class="component-detail-item-content">
+          <a-input v-model="clickItem.label1" :maxLength="20" />
+        </div>
+        <div class="component-detail-item-title">
+          标题2
+          <span class="gray">最多20个字</span>
+        </div>
+        <div class="component-detail-item-content">
+          <a-input v-model="clickItem.label2" :maxLength="20" />
+        </div>
+        <div class="component-detail-item-title">
+          提示文字
+          <span class="gray">最多20个字</span>
+        </div>
+        <div class="component-detail-item-content">
+          <a-input v-model="clickItem.placeholder" :maxLength="20" />
+        </div>
+        <div class="component-detail-item-title">日期类型</div>
+        <div class="component-detail-item-content">
+          <a-radio-group v-model="clickItem.format" style="display: flex;flex-direction: column">
+            <a-radio value="YYYY-MM-DD">年-月-日</a-radio>
+            <a-radio value="YYYY-MM-DD HH:mm">年-月-日 时:分</a-radio>
+          </a-radio-group>
+        </div>
+        <div class="component-detail-item-title">验证（勾选后可作为流程条件）</div>
+        <div class="component-detail-item-content">
+          <a-checkbox v-model="clickItem.required">必填</a-checkbox>
+        </div>
+        <div class="component-detail-item-title">自动计算时长</div>
+        <div class="component-detail-item-content">
+          <a-checkbox v-model="clickItem.autoCalculate">开启</a-checkbox>
+        </div>
+        <div class="component-detail-item-title" v-if="clickItem.autoCalculate">
+          标题
+          <span class="gray">最多20个字</span>
+        </div>
+        <div class="component-detail-item-content" v-if="clickItem.autoCalculate">
+          <a-input v-model="clickItem.timeLabel" :maxLength="20" />
+        </div>
+      </div>
+
+      
     </div>
 
+    <a-button
+      type="primary"
+      style="position: absolute; top: 10px;right: 200px;z-index: 99999"
+      @click="save"
+    >保存</a-button>
     <formulaModal
       v-if="formulaModalShow"
       :formulaModalShow="formulaModalShow"
@@ -224,7 +410,7 @@ export default {
       activeTab: "1",
       components, // 可选组件
       componentList: [], // 中间手机端添加的组件
-      count: 7, // y用于拖拽新组建生成的id
+      count: 20, // y用于拖拽新组建生成的id
       clickItemId: null, // 选择的组件id
       formulaModalShow: false // 计算公式弹窗
     };
@@ -273,6 +459,7 @@ export default {
       console.log(this.clickItemId);
     },
     changeComponentE(name, e) {
+      // 组件详情更改
       console.log(name, e.target.value, this.clickItemId, this.componentList);
       this.componentList = this.componentList.map(item => {
         if (item.id === this.clickItemId) {
@@ -290,6 +477,7 @@ export default {
       console.log(this.componentList);
     },
     changeComponentFormula(formulaList) {
+      // 计算公式更爱
       console.log(formulaList, "计算公式数组");
       this.componentList = this.componentList.map(item => {
         if (item.id === this.clickItemId) {
@@ -302,6 +490,18 @@ export default {
       });
       this.formulaModalShow = false;
       console.log(this.componentList, "最新的组件数组");
+    },
+    plusOption(optionList) {
+      if (optionList.length < 20) {
+        optionList.push({ name: "" });
+      }
+    },
+    deleteOption(optionList, index) {
+      optionList.splice(index, 1);
+    },
+
+    save() {
+      console.log(this.componentList);
     }
   }
 };
@@ -372,6 +572,33 @@ export default {
     background-color: #fff;
     border: 1px solid #ccc;
     cursor: move;
+  }
+  .date-range {
+    background: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    .date-range-title {
+      color: #000;
+      width: 6.2em;
+      word-break: break-all;
+      position: relative;
+      .red {
+        position: absolute;
+        top: 0;
+        left: -10px;
+        color: red;
+      }
+    }
+    .date-range-content {
+      display: flex;
+      align-items: center;
+      .date-range-content-word {
+        color: rgb(153, 153, 153);
+        max-width: 150px;
+        word-break: break-all;
+      }
+    }
   }
 }
 

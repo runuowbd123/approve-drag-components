@@ -5,7 +5,7 @@
         <img src="../../assets/images/login-bg.png" />
       </div>
       <div class="layout-header-right">
-        <template v-if="info.curr.entpIsFormal || info.curr.entpIsAuth">
+        <!-- <template v-if="info.curr.entpIsFormal || info.curr.entpIsAuth">
           <div v-if="info.entps.length > 1" style="margin-right: 10px;">
             <a-dropdown :trigger="['click']">
               <div style="cursor: pointer;">
@@ -19,7 +19,7 @@
             </a-dropdown>
           </div>
           <div style="margin-right: 10px;color: #000" v-else>{{entpName}}</div>
-        </template>
+        </template> -->
         <a-avatar style="vertical-align:top;" icon="user" />
         <a-button class="color51" style="padding:0 5px;" type="link">{{info.curr.loginAcctName}}</a-button>
         <a-button type="link" @click="layout">退出</a-button>
@@ -37,11 +37,11 @@
           <template v-if="item.children && item.children.length > 0">
             <a-sub-menu
               :key="item.key"
-              v-if="submenuShow(item.permission, item.childrenPermission)"
             >
+            <!-- v-if="submenuShow(item.permission, item.childrenPermission)" -->
               <span slot="title">
-                <img :src="require(`../../assets/images/${item.activeLogo}`)" alt class="white" />
-                <img :src="require(`../../assets/images/${item.logo}`)" alt class="black" />
+                <img :src="require(`../../assets/images/${item.activeLogo}`)" alt class="white"  v-if="item.activeLogo" />
+                <img :src="require(`../../assets/images/${item.logo}`)" alt class="black"  v-if="item.logo" />
                 <span>{{item.title}}</span>
               </span>
               <template v-for="it in item.children">
@@ -55,10 +55,10 @@
           <template v-else>
             <a-menu-item
               :key="item.key"
-              v-if="(info.curr.moduleIds || []).includes(item.permission) || item.permission === 'always'"
             >
-              <img :src="require(`../../assets/images/${item.activeLogo}`)" alt class="white" />
-              <img :src="require(`../../assets/images/${item.logo}`)" alt class="black" />
+            <!-- v-if="(info.curr.moduleIds || []).includes(item.permission) || item.permission === 'always'" -->
+              <img :src="require(`../../assets/images/${item.activeLogo}`)" alt class="white" v-if="item.activeLogo" />
+              <img :src="require(`../../assets/images/${item.logo}`)" alt class="black" v-if="item.logo"/>
               {{item.title}}
             </a-menu-item>
           </template>
@@ -166,18 +166,18 @@ export default {
         this.openKeys = ["/settings"];
       }
     },
-    submenuShow(permission, childrenPermission) {
-      const permissionShow = (this.info.curr.moduleIds || []).includes(
-        permission
-      );
-      let childrenPermissionShow = false;
-      (this.info.curr.moduleIds || []).forEach(item => {
-        if (childrenPermission.includes(item)) {
-          childrenPermissionShow = true;
-        }
-      });
-      return permissionShow && childrenPermissionShow;
-    }
+    // submenuShow(permission, childrenPermission) {
+    //   const permissionShow = (this.info.curr.moduleIds || []).includes(
+    //     permission
+    //   );
+    //   let childrenPermissionShow = false;
+    //   (this.info.curr.moduleIds || []).forEach(item => {
+    //     if (childrenPermission.includes(item)) {
+    //       childrenPermissionShow = true;
+    //     }
+    //   });
+    //   return permissionShow && childrenPermissionShow;
+    // }
   }
 };
 </script>
