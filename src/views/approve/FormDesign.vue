@@ -68,6 +68,22 @@
               :key="item.id"
             >{{ item.name }}</div>
           </draggable>
+          <!-- 其他 -->
+          <div class="title">其他</div>
+          <draggable
+            class="list-group"
+            :list="components.other"
+            :group="{ name: 'comp', pull: 'clone', put: false }"
+            @change="log"
+            :options="{sort: false}"
+            filter=".undraggable"
+          >
+            <div
+              class="list-group-item"
+              v-for="item in components.other"
+              :key="item.id"
+            >{{ item.name }}</div>
+          </draggable>
         </a-tab-pane>
         <a-tab-pane key="2" tab="控件组">Content of Tab Pane 2</a-tab-pane>
       </a-tabs>
@@ -136,9 +152,9 @@
           <template v-if="item.type==='formula'">
             <van-field :label="item.label" :value="'自动计算'" :required="item.required" />
           </template>
-          <!-- 单选框 或者 多选框 或者 日期 -->
+          <!-- 单选框 或者 多选框 或者 日期 或者 联系人 或者部门-->
           <template
-            v-if="item.type==='radio' || item.type === 'checkbox' || item.type === 'datepicker'"
+            v-if="item.type==='radio' || item.type === 'checkbox' || item.type === 'datepicker' || item.type === 'contact' || item.type === 'department'"
           >
             <div
               style="padding: 15px 20px;background: #fff;display: flex;justify-content: space-between"
@@ -178,12 +194,49 @@
               </div>
             </div>
             <div class="date-range" v-if="item.autoCalculate">
-              <div class="date-range-title">
-                {{item.timeLabel}}
-              </div>
+              <div class="date-range-title">{{item.timeLabel}}</div>
               <div class="date-range-content">
                 <div class="date-range-content-word">自动计算</div>
-                <van-icon name="arrow" style="margin-left: 5px" v-show="false"/>
+                <van-icon name="arrow" style="margin-left: 5px" v-show="false" />
+              </div>
+            </div>
+          </template>
+          <!-- 明细/表格 -->
+          <template v-if="item.type==='detail'">
+            <div style="padding: 10px;background: #fff;">
+              <div style="margin-bottom: 5px">明细</div>
+              <div
+                style="cursor: pointer;background: rgb(242,242,242);text-align: center;display: flex; flex-direction: column;justify-content: space-around;height:130px;padding: 20px 0;"
+              >
+                <div>可拖入多个控件（不包含明细控件）</div>
+                <div style="color: blue">+ 添加</div>
+              </div>
+            </div>
+          </template>
+          <!-- 省市区 -->
+          <template v-if="item.type==='address'">
+            <div class="date-range">
+              <div class="date-range-title">
+                {{item.label}}
+                <div class="red" v-if="item.required">*</div>
+              </div>
+              <div class="date-range-content">
+                <div class="date-range-content-word">请选择</div>
+                <van-icon name="arrow" style="margin-left: 5px" />
+              </div>
+            </div>
+            <van-field type="textarea" placeholder="请输入详细地址" v-if="item.format === 'ssq-detail'" />
+          </template>
+          <!-- 图片, 附件 -->
+          <template v-if="item.type==='picture' || item.type === 'annex'">
+            <div class="date-range">
+              <div class="date-range-title">
+                {{item.label}}
+                <div class="red" v-if="item.required">*</div>
+              </div>
+              <div class="date-range-content">
+                <van-icon name="photo" style="font-size: 20px" v-if="item.type==='picture'" />
+                <a-icon type="folder-add" style="font-size: 18px" v-if="item.type==='annex'" />
               </div>
             </div>
           </template>
@@ -201,9 +254,9 @@
     <!-- 右侧组件详情部分 -->
     <div class="component-detail">
       <div class="title">{{clickItem.name}}</div>
-      <!-- 单行输入框,多行输入框,数字输入框, 单选框，多选框, 日期 -->
+      <!-- 单行输入框,多行输入框,数字输入框, 单选框，多选框, 日期, 联系人, 部门 -->
       <div
-        v-if="clickItem.type === 'input' || clickItem.type === 'textArea' || clickItem.type === 'number' || clickItem.type === 'money' || clickItem.type === 'radio' || clickItem.type === 'checkbox' || clickItem.type === 'datepicker'"
+        v-if="clickItem.type === 'input' || clickItem.type === 'textArea' || clickItem.type === 'number' || clickItem.type === 'money' || clickItem.type === 'radio' || clickItem.type === 'checkbox' || clickItem.type === 'datepicker' || clickItem.type === 'contact' || clickItem.type === 'department'"
         class="component-detail-item"
       >
         <div class="component-detail-item-title">
@@ -228,8 +281,8 @@
             :maxLength="20"
           />
         </div>
+        <!-- 数字输入框多一个单位配置 -->
         <template v-if="clickItem.type === 'number'">
-          <!-- 数字输入框多一个单位配置 -->
           <div class="component-detail-item-title">
             单位
             <span class="gray">最多20个字</span>
@@ -242,8 +295,8 @@
             />
           </div>
         </template>
+        <!-- 单选框和多选框多个选项配置 -->
         <template v-if="clickItem.type === 'radio' || clickItem.type === 'checkbox'">
-          <!-- 单选框和多选框多个选项配置 -->
           <div class="component-detail-item-title">
             选项
             <span class="gray">每项最多20个字，最多20项</span>
@@ -277,6 +330,7 @@
             </draggable>
           </div>
         </template>
+        <!-- 日期 日期类型组件 -->
         <template v-if="clickItem.type === 'datepicker'">
           <div class="component-detail-item-title">日期类型</div>
           <div class="component-detail-item-content">
@@ -284,6 +338,21 @@
               <a-radio value="YYYY-MM-DD">年-月-日</a-radio>
               <a-radio value="YYYY-MM-DD HH:mm">年-月-日 时:分</a-radio>
             </a-radio-group>
+          </div>
+        </template>
+        <!-- 联系人 选择范围组件 -->
+        <template v-if="clickItem.type === 'contact'">
+          <div class="component-detail-item-title">选择范围</div>
+          <div class="component-detail-item-content">
+            <a-checkbox v-model="clickItem.canChooseMe">可选自己</a-checkbox>
+            <a-checkbox v-model="clickItem.canChooseMore">可选多人</a-checkbox>
+          </div>
+        </template>
+        <!-- 部门 选择范围组件 -->
+        <template v-if="clickItem.type === 'department'">
+          <div class="component-detail-item-title">选择范围</div>
+          <div class="component-detail-item-content">
+            <a-checkbox v-model="clickItem.canChooseMore">可选多部门</a-checkbox>
           </div>
         </template>
         <div class="component-detail-item-title">验证（勾选后可作为流程条件）</div>
@@ -377,7 +446,33 @@
         </div>
       </div>
 
-      
+      <!-- 明细, 省市区, 图片, 附件 -->
+      <div
+        v-if="clickItem.type === 'address' || clickItem.type === 'detail' || clickItem.type === 'picture' || clickItem.type === 'annex'"
+        class="component-detail-item"
+      >
+        <div class="component-detail-item-title">
+          标题
+          <span class="gray">最多20个字</span>
+        </div>
+        <div class="component-detail-item-content">
+          <a-input v-model="clickItem.label" :maxLength="20" />
+        </div>
+        <div class="component-detail-item-title">验证（勾选后可作为流程条件）</div>
+        <div class="component-detail-item-content">
+          <a-checkbox v-model="clickItem.required">必填</a-checkbox>
+        </div>
+        <template v-if="clickItem.type === 'address'">
+          <!-- 省市区格式配置 -->
+          <div class="component-detail-item-title">格式</div>
+          <div class="component-detail-item-content">
+            <a-radio-group v-model="clickItem.format" style="display: flex;flex-direction: column">
+              <a-radio value="ssq">省市区</a-radio>
+              <a-radio value="ssq-detail">省市区-详细地址</a-radio>
+            </a-radio-group>
+          </div>
+        </template>
+      </div>
     </div>
 
     <a-button
