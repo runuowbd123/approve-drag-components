@@ -64,6 +64,14 @@ export default [{
         isBack: false,
         breadTitle: "",
       },
+    }, {
+      path: "process",
+      name: "process",
+      component: () => import("@/views/approve/Process.vue"),
+      meta: {
+        isBack: false,
+        breadTitle: "",
+      },
     },],
   },
 ];

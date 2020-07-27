@@ -25,7 +25,8 @@
         <a-button type="link" @click="layout">退出</a-button>
       </div>
     </div>
-    <div class="layout-asider" v-if="info.curr.entpIsFormal || info.curr.entpIsAuth">
+    <!-- <div class="layout-asider" v-if="info.curr.entpIsFormal || info.curr.entpIsAuth"> -->
+    <div class="layout-asider">
       <a-menu
         mode="inline"
         @select="handleClick"
@@ -65,7 +66,8 @@
         </template>
       </a-menu>
     </div>
-    <div class="layout-main" :style="info.curr.entpIsFormal || info.curr.entpIsAuth ? '' : 'margin-left: 0'">
+    <!-- <div class="layout-main" :style="info.curr.entpIsFormal || info.curr.entpIsAuth ? '' : 'margin-left: 0'"> 0-->
+    <div class="layout-main">
       <div class="page-title" v-if="isBack||breadTitle">
         <a-button type="link" v-if="isBack" @click="$router.go(-1)">
           <a-icon type="left" />
@@ -118,12 +120,12 @@ export default {
     this.$bus.$on("changeBreadTitle", msg => {
       this.breadTitle = msg;
     });
-    this.api.login02({}).then(res => {
-      this.info = res.data;
-      this.selectedEntpId = this.info.curr.entpId;
-      sessionStorage.setItem("userInfo", JSON.stringify(this.info));
-      console.log("------------个人信息", this.info);
-    });
+    // this.api.login02({}).then(res => {
+    //   this.info = res.data;
+    //   this.selectedEntpId = this.info.curr.entpId;
+    //   sessionStorage.setItem("userInfo", JSON.stringify(this.info));
+    //   console.log("------------个人信息", this.info);
+    // });
     this.selectedKeys = this.$route.path;
     this.setOpenKeys();
   },
