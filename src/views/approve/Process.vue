@@ -32,75 +32,73 @@ export default {
       process: {
         title: "发起人",
         content: "所有人",
+        type: 'originator',
         isRoot: true,
-        childNode: {
-          // conditions: [
-          //   {
-          //     title: "条件1",
-          //     content: "条件1content",
-          //     childNode: {
-          //       conditions: [
-          //         {
-          //           title: "条件1-1",
-          //           content: "条件1-1content"
-          //         },
-          //         {
-          //           title: "条件1-2",
-          //           content: "条件2content"
-          //         }
-          //       ]
-          //     }
-          //   },
-          //   {
-          //     title: "条件2",
-          //     content: "条件2content",
-          //     childNode: {
-          //       title: "节点审批人",
-          //       content: "节点审批人",
-          //       conditions: [
-          //         {
-          //           title: "条件2-1",
-          //           content: "条件1-1content"
-          //         },
-          //         {
-          //           title: "条件2-2",
-          //           content: "条件2content"
-          //         }
-          //       ]
-          //     }
-          //   }
-          // ],
-          childNode: {
-            conditions: [
-              {
-                title: "条件1",
-                content: "条件1content"
-              },
-              {
-                title: "条件2",
-                content: "条件2content"
-              },
-              {
-                title: "条件3",
-                content: "条件3content"
-              }
-            ]
-          }
-        }
+        // childNode: {
+        //   conditions: [
+        //     {
+        //       title: "条件1",
+        //       content: "条件1content",
+        //       sort: 0
+        //     },
+        //     {
+        //       title: "条件2",
+        //       content: "条件2content",
+        //       sort: 1,
+        //       childNode: {
+        //         title: "节点审批人",
+        //         content: "节点审批人",
+        //         type: 'approval'
+        //       }
+        //     }
+        //   ],
+        //   childNode: {
+        //     conditions: [
+        //       {
+        //         title: "条件1",
+        //         content: "条件1content",
+        //         sort: 0
+        //       },
+        //       {
+        //         title: "条件2",
+        //         content: "条件2content",
+        //         sort: 1
+        //       },
+        //       {
+        //         title: "条件3",
+        //         content: "条件3content",
+        //         sort: 2
+        //       }
+        //     ]
+        //   }
+        // }
       }
     };
   },
   methods: {
     addCondition(process) {
       // 添加条件
+      let sort = process.conditions.length;
       process.conditions.push({
-        title: "条件X",
-        content: "条件XX"
+        title: `条件${sort + 1}`,
+        content: "",
+        sort
       });
     },
-    deleteCondition(item, process, parent) {
+    deleteCondition(index, process, parent) {
       // 删除条件
-      console.log('--删除对象--',item,'删除对象所在的对象节点' , process,'删除对象所在的对象节点的父对象' ,parent);
+      console.log('--删除所在位置--',index,'删除对象所在的对象节点' , process,'删除对象所在的对象节点的父对象' ,parent);
+      if(process.conditions.length < 3) {
+        if(process.content) {
+          delete process.conditions;
+        } else {
+          parent.childNode = process.childNode;
+        }
+      } else {
+        process.conditions.splice(index, 1)
+      }
+       this.process = JSON.parse(JSON.stringify(this.process));
+       console.log(this.process)
     },
     addChildNode(process, type) {
       // 正常节点下的加号
@@ -108,28 +106,28 @@ export default {
       if (type === "condition") {
         process.conditions = [
           {
-            title: "条件新1",
-            content: "条件"
+            title: "条件1",
+            content: "",
+            sort: 0
           },
           {
-            title: "条件新2",
-            content: "条件"
-          }
+            title: "条件2",
+            content: "",
+            sort: 1
+          },
         ];
         process.childNode = {
-          ...newProcess,
-          isRoot: false
+          childNode: newProcess.childNode,
+          conditions: newProcess.conditions,
         };
-        delete process.childNode.content;
-        delete process.childNode.title;
       } else {
-        // process.conditions = undefined;
         delete process.conditions;
         process.childNode = {
-          ...newProcess,
-          title: "新节点",
-          content: "新节点",
-          isRoot: false
+          title: type==="approval" ? '审批人': '抄送人',
+          type: type,
+          content: "",
+          childNode: newProcess.childNode,
+          conditions: newProcess.conditions
         };
       }
       this.process = JSON.parse(JSON.stringify(this.process));
@@ -143,13 +141,15 @@ export default {
         process.childNode = {
           conditions: [
             {
-              title: "end条件1",
-              content: "条件1content"
+              title: "条件1",
+              content: "",
+              sort: 0
             },
             {
-              title: "end条件2",
-              content: "条件2content"
-            }
+              title: "条件2",
+              content: "",
+              sort: 1
+            },
           ],
           childNode: {
             ...childNode
@@ -157,9 +157,9 @@ export default {
         };
       } else {
         process.childNode = {
-          title: "新节点11",
-          content: "新节点11",
-          isRoot: false,
+          title: type==="approval" ? '审批人': '抄送人',
+          type,
+          content: "",
           childNode: {
             ...childNode
           }

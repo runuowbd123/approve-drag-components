@@ -91,164 +91,169 @@
 
     <!-- 中间手机部分 -->
     <div class="mobile">
-      <draggable
-        :list="componentList"
-        group="comp"
-        @change="log"
-        style="height: 545px;overflow: auto;background: rgb(248,248,249);"
-      >
-        <div
-          v-for="(item,index) in componentList"
-          :key="index"
-          class="list-group-item1"
-          :class="item.id === clickItemId ? 'list-group-item-active': ''"
-          @click="clickComponent(item)"
+      <div class="mobile-wrap">
+        <draggable
+          :list="componentList"
+          group="comp"
+          @change="log"
+          style="height: 545px;overflow: auto;background: #f3f3f3"
         >
-          <!-- 单行输入框 -->
-          <template v-if="item.type==='input'">
-            <van-field
-              :label="item.label"
-              :placeholder="item.placeholder"
-              :required="item.required"
-            />
-          </template>
-          <!-- 多行输入框 -->
-          <template v-if="item.type==='textArea'">
-            <van-field
-              type="textarea"
-              :label="item.label"
-              :placeholder="item.placeholder"
-              :required="item.required"
-            />
-          </template>
-          <!-- 说明文字 -->
-          <template v-if="item.type==='explain'">
-            <van-field type="textarea" placeholder="请输入说明文字" :value="item.content" />
-          </template>
-          <!-- 数字输入框 -->
-          <template v-if="item.type==='number'">
-            <van-field
-              type="number"
-              :label="item.label"
-              :placeholder="item.placeholder"
-              :required="item.required"
-            />
-            <div style="width: 100%;padding: 0 16px">
-              <div
-                style="font-size: 12px;color: #ccc;width: 6.2em;display: flex;justify-content: center;word-break:break-all"
-              >({{item.unit}})</div>
-            </div>
-          </template>
-          <!-- 金额 -->
-          <template v-if="item.type==='money'">
-            <van-field
-              type="number"
-              :label="item.label"
-              :placeholder="item.placeholder"
-              :required="item.required"
-            />
-          </template>
-          <!-- 计算公式 -->
-          <template v-if="item.type==='formula'">
-            <van-field :label="item.label" :value="'自动计算'" :required="item.required" />
-          </template>
-          <!-- 单选框 或者 多选框 或者 日期 或者 联系人 或者部门-->
-          <template
-            v-if="item.type==='radio' || item.type === 'checkbox' || item.type === 'datepicker' || item.type === 'contact' || item.type === 'department'"
+          <div
+            v-for="(item,index) in componentList"
+            :key="index"
+            class="list-group-item1"
+            :class="item.id === clickItemId ? 'list-group-item-active': ''"
+            @click="clickComponent(item)"
           >
-            <div
-              style="padding: 15px 20px;background: #fff;display: flex;justify-content: space-between"
-            >
-              <div style="color: #000;width: 6.2em;word-break:break-all;position:relative">
-                {{item.label}}
-                <div style="position:absolute;top: 0;left: -10px;color: red" v-if="item.required">*</div>
-              </div>
-              <div style="display: flex;align-items: center">
+            <!-- 单行输入框 -->
+            <template v-if="item.type==='input'">
+              <van-field
+                :label="item.label"
+                :placeholder="item.placeholder"
+                :required="item.required"
+              />
+            </template>
+            <!-- 多行输入框 -->
+            <template v-if="item.type==='textArea'">
+              <van-field
+                type="textarea"
+                :label="item.label"
+                :placeholder="item.placeholder"
+                :required="item.required"
+              />
+            </template>
+            <!-- 说明文字 -->
+            <template v-if="item.type==='explain'">
+              <van-field type="textarea" placeholder="请输入说明文字" :value="item.content" />
+            </template>
+            <!-- 数字输入框 -->
+            <template v-if="item.type==='number'">
+              <van-field
+                type="number"
+                :label="item.label"
+                :placeholder="item.placeholder"
+                :required="item.required"
+              />
+              <div style="width: 100%;padding: 0 16px">
                 <div
-                  style="color: rgb(153, 153, 153);max-width: 150px;word-break:break-all"
-                >{{item.placeholder}}</div>
-                <van-icon name="arrow" style="margin-left: 5px" />
+                  style="font-size: 12px;color: #ccc;width: 6.2em;display: flex;justify-content: center;word-break:break-all"
+                >({{item.unit}})</div>
               </div>
-            </div>
-          </template>
-          <!-- 日期区间 -->
-          <template v-if="item.type==='datepickerRange'">
-            <div class="date-range">
-              <div class="date-range-title">
-                {{item.label1}}
-                <div class="red" v-if="item.required">*</div>
-              </div>
-              <div class="date-range-content">
-                <div class="date-range-content-word">{{item.placeholder}}</div>
-                <van-icon name="arrow" style="margin-left: 5px" />
-              </div>
-            </div>
-            <div class="date-range">
-              <div class="date-range-title">
-                {{item.label2}}
-                <div class="red" v-if="item.required">*</div>
-              </div>
-              <div class="date-range-content">
-                <div class="date-range-content-word">{{item.placeholder}}</div>
-                <van-icon name="arrow" style="margin-left: 5px" />
-              </div>
-            </div>
-            <div class="date-range" v-if="item.autoCalculate">
-              <div class="date-range-title">{{item.timeLabel}}</div>
-              <div class="date-range-content">
-                <div class="date-range-content-word">自动计算</div>
-                <van-icon name="arrow" style="margin-left: 5px" v-show="false" />
-              </div>
-            </div>
-          </template>
-          <!-- 明细/表格 -->
-          <template v-if="item.type==='detail'">
-            <div style="padding: 10px;background: #fff;">
-              <div style="margin-bottom: 5px">明细</div>
+            </template>
+            <!-- 金额 -->
+            <template v-if="item.type==='money'">
+              <van-field
+                type="number"
+                :label="item.label"
+                :placeholder="item.placeholder"
+                :required="item.required"
+              />
+            </template>
+            <!-- 计算公式 -->
+            <template v-if="item.type==='formula'">
+              <van-field :label="item.label" :value="'自动计算'" :required="item.required" />
+            </template>
+            <!-- 单选框 或者 多选框 或者 日期 或者 联系人 或者部门-->
+            <template
+              v-if="item.type==='radio' || item.type === 'checkbox' || item.type === 'datepicker' || item.type === 'contact' || item.type === 'department'"
+            >
               <div
-                style="cursor: pointer;background: rgb(242,242,242);text-align: center;display: flex; flex-direction: column;justify-content: space-around;height:130px;padding: 20px 0;"
+                style="padding: 15px 20px;background: #fff;display: flex;justify-content: space-between"
               >
-                <div>可拖入多个控件（不包含明细控件）</div>
-                <div style="color: blue">+ 添加</div>
+                <div style="color: #000;width: 6.2em;word-break:break-all;position:relative">
+                  {{item.label}}
+                  <div
+                    style="position:absolute;top: 0;left: -10px;color: red"
+                    v-if="item.required"
+                  >*</div>
+                </div>
+                <div style="display: flex;align-items: center">
+                  <div
+                    style="color: rgb(153, 153, 153);max-width: 150px;word-break:break-all"
+                  >{{item.placeholder}}</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
               </div>
-            </div>
-          </template>
-          <!-- 省市区 -->
-          <template v-if="item.type==='address'">
-            <div class="date-range">
-              <div class="date-range-title">
-                {{item.label}}
-                <div class="red" v-if="item.required">*</div>
+            </template>
+            <!-- 日期区间 -->
+            <template v-if="item.type==='datepickerRange'">
+              <div class="date-range">
+                <div class="date-range-title">
+                  {{item.label1}}
+                  <div class="red" v-if="item.required">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">{{item.placeholder}}</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
               </div>
-              <div class="date-range-content">
-                <div class="date-range-content-word">请选择</div>
-                <van-icon name="arrow" style="margin-left: 5px" />
+              <div class="date-range">
+                <div class="date-range-title">
+                  {{item.label2}}
+                  <div class="red" v-if="item.required">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">{{item.placeholder}}</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
               </div>
-            </div>
-            <van-field type="textarea" placeholder="请输入详细地址" v-if="item.format === 'ssq-detail'" />
-          </template>
-          <!-- 图片, 附件 -->
-          <template v-if="item.type==='picture' || item.type === 'annex'">
-            <div class="date-range">
-              <div class="date-range-title">
-                {{item.label}}
-                <div class="red" v-if="item.required">*</div>
+              <div class="date-range" v-if="item.autoCalculate">
+                <div class="date-range-title">{{item.timeLabel}}</div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">自动计算</div>
+                  <van-icon name="arrow" style="margin-left: 5px" v-show="false" />
+                </div>
               </div>
-              <div class="date-range-content">
-                <van-icon name="photo" style="font-size: 20px" v-if="item.type==='picture'" />
-                <a-icon type="folder-add" style="font-size: 18px" v-if="item.type==='annex'" />
+            </template>
+            <!-- 明细/表格 -->
+            <template v-if="item.type==='detail'">
+              <div style="padding: 10px;background: #fff;">
+                <div style="margin-bottom: 5px">明细</div>
+                <div
+                  style="cursor: pointer;background: rgb(242,242,242);text-align: center;display: flex; flex-direction: column;justify-content: space-around;height:130px;padding: 20px 0;"
+                >
+                  <div>可拖入多个控件（不包含明细控件）</div>
+                  <div style="color: blue">+ 添加</div>
+                </div>
               </div>
-            </div>
-          </template>
+            </template>
+            <!-- 省市区 -->
+            <template v-if="item.type==='address'">
+              <div class="date-range">
+                <div class="date-range-title">
+                  {{item.label}}
+                  <div class="red" v-if="item.required">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <van-field type="textarea" placeholder="请输入详细地址" v-if="item.format === 'ssq-detail'" />
+            </template>
+            <!-- 图片, 附件 -->
+            <template v-if="item.type==='picture' || item.type === 'annex'">
+              <div class="date-range">
+                <div class="date-range-title">
+                  {{item.label}}
+                  <div class="red" v-if="item.required">*</div>
+                </div>
+                <div class="date-range-content">
+                  <van-icon name="photo" style="font-size: 20px" v-if="item.type==='picture'" />
+                  <a-icon type="folder-add" style="font-size: 18px" v-if="item.type==='annex'" />
+                </div>
+              </div>
+            </template>
 
-          <a-icon
-            type="close-circle"
-            v-if="item.id === clickItemId"
-            class="close"
-            @click.stop="deleteItem(index)"
-          />
-        </div>
-      </draggable>
+            <a-icon
+              type="close-circle"
+              v-if="item.id === clickItemId"
+              class="close"
+              @click.stop="deleteItem(index)"
+            />
+          </div>
+        </draggable>
+      </div>
     </div>
 
     <!-- 右侧组件详情部分 -->
@@ -605,7 +610,7 @@ export default {
 .row {
   display: flex;
   justify-content: space-between;
-  background: #fff;
+  background: #f3f3f3;
   height: calc(100vh - 75px);
 }
 .component-list {
@@ -614,6 +619,7 @@ export default {
   border-right: 1px solid #ccc;
   padding: 10px;
   overflow: auto;
+  background: #fff;
   .title {
     font-size: 14px;
     margin-bottom: 10px;
@@ -637,6 +643,12 @@ export default {
   margin-top: 50px;
   width: 340px;
   flex: none;
+  .mobile-wrap {
+    padding: 30px 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px #ccc;;
+  }
   .list-group-item1 {
     position: relative;
     display: block;
@@ -701,6 +713,7 @@ export default {
   width: 300px;
   flex: none;
   border-left: 1px solid #ccc;
+  background: #fff;
   .title {
     border-bottom: 1px solid #ccc;
     padding: 10px;

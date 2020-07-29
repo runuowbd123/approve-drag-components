@@ -1,20 +1,36 @@
 <template>
   <div class="tree-wrap">
     <!-- 当前节点信息 -->
-    <div style="display: flex; flex-direction:column;align-items: center;background: #f5f5f7;">
-      <div class="tree-item" v-if="process.content">
+    <div
+      style="display: flex; flex-direction:column;align-items: center;background: #f5f5f7;"
+      v-if="process.title"
+    >
+      <div class="tree-item">
         <div
           style="position:absolute;left:0;top:0px;width: 100%;background: #f5f5f7;z-index: 999;height: 40px"
           v-if="process.isRoot"
         ></div>
         <div class="tree-item-border"></div>
         <div class="tree-item-content">
-          <a-icon type="close" class="tree-item-content-close" @click.stop="deleteChildNode(process, parent)" v-if="!process.isRoot"/>
-          <div class="tree-item-content-title">{{process.title}}</div>
-          <div class="tree-item-content-content">{{process.content}}</div>
+          <a-icon
+            type="close"
+            class="tree-item-content-close"
+            style="color: #fff"
+            @click.stop="deleteChildNode(process, parent)"
+            v-if="!process.isRoot"
+          />
+          <div
+            class="tree-item-content-title"
+            style="color: #fff"
+            :style="process.type==='originator' ? 'background:#576a95' : (process.type==='approval' ? 'background:#ff943e;' : 'background:#3296fa')"
+          >{{process.title}}</div>
+          <div class="tree-item-content-content">
+            <div v-if="process.content">{{process.content}}</div>
+            <div v-else style="color: #999">请设置</div>
+          </div>
         </div>
       </div>
-      <div class="add-button" v-if="process.content">
+      <div class="add-button">
         <a-popover
           :title="null"
           trigger="click"
@@ -35,10 +51,7 @@
     </div>
     <!-- 子节点条件节点 -->
     <div class="tree" v-if="process.conditions && process.conditions.length > 0">
-      <div
-        style="cursor:pointer;position:absolute;top:-17px;left: calc(50% - 40px);width: 80px;padding: 10px 0;border: 1px solid #ccc;background: #f5f5f7;z-index: 99999"
-        @click="addCondition(process)"
-      >添加条件</div>
+      <div class="addcondition-button" @click="addCondition(process)">添加条件</div>
       <div
         v-for="(item, index) in process.conditions"
         :key="index"
@@ -47,9 +60,19 @@
         <div class="tree-item">
           <div class="tree-item-border"></div>
           <div class="tree-item-content">
-            <a-icon type="close" class="tree-item-content-close" @click.stop="deleteCondition(item, process, parent)"/>
-            <div class="tree-item-content-title">{{item.title}}</div>
-            <div class="tree-item-content-content">{{item.content}}</div>
+            <a-icon
+              type="close"
+              class="tree-item-content-close"
+              @click.stop="deleteCondition(index, process, parent)"
+            />
+            <div class="tree-item-content-title">
+              <div style="width: 110px;text-align:left;word-break: break-all;">{{item.title}}</div>
+              <span style="color: #999;">优先级{{item.sort + 1}}</span>
+            </div>
+            <div class="tree-item-content-content">
+              <div v-if="item.content">{{item.content}}</div>
+              <div v-else style="color: #999">请设置</div>
+            </div>
           </div>
         </div>
         <div class="add-button">
@@ -128,14 +151,18 @@ export default {
   props: {
     process: {
       type: Object,
-      default: () => {return {}},
+      default: () => {
+        return {};
+      },
       required: true
     },
     parent: {
       type: Object,
-      default: () => {return {}},
+      default: () => {
+        return {};
+      },
       required: false
-    },
+    }
   },
   data() {
     return {};
@@ -153,8 +180,8 @@ export default {
     deleteChildNode(process, parent) {
       this.$emit("deleteChildNode", process, parent);
     },
-    deleteCondition(item, process, parent) {
-      this.$emit("deleteCondition", item, process, parent);
+    deleteCondition(index, process, parent) {
+      this.$emit("deleteCondition", index, process, parent);
     }
   }
 };
@@ -172,47 +199,60 @@ export default {
     .condition-vertival {
       height: 100%;
       width: 0;
-      border-right: 1px solid #000;
+      border-right: 1px solid #999;
       position: absolute;
       left: 50%;
       top: 0;
     }
+    .addcondition-button {
+      cursor: pointer;
+      position: absolute;
+      top: -17px;
+      left: calc(50% - 40px);
+      width: 80px;
+      padding: 10px 0;
+      box-shadow: 0 0 10px #ccc;
+      background: #fff;
+      z-index: 99999;
+      border-radius: 15px;
+      color: #1890ff;
+    }
     // .border-bottom-whole {
     //   width: 100%;
-    //   border-bottom: 1px solid #000;
+    //   border-bottom: 1px solid #999;
     //   position: absolute;
     //   bottom: 0;
     // }
     // .border-bottom-left {
     //   width: 50%;
-    //   border-bottom: 1px solid #000;
+    //   border-bottom: 1px solid #999;
     //   position: absolute;
     //   bottom: 0;
     //   left: 0;
     // }
     // .border-bottom-right {
     //   width: 50%;
-    //   border-bottom: 1px solid #000;
+    //   border-bottom: 1px solid #999;
     //   position: absolute;
     //   bottom: 0;
     //   right: 0;
     // }
     // .border-top-whole {
     //   width: 100%;
-    //   border-bottom: 1px solid #000;
+    //   border-bottom: 1px solid #999;
     //   position: absolute;
     //   top: 0;
     // }
     // .border-top-left {
     //   width: 50%;
-    //   border-bottom: 1px solid #000;
+    //   border-bottom: 1px solid #999;
     //   position: absolute;
     //   top: 0;
     //   left: 0;
     // }
     // .border-top-right {
     //   width: 50%;
-    //   border-bottom: 1px solid #000;
+    //   border-bottom: 1px solid #999;
     //   position: absolute;
     //   top: 0;
     //   right: 0;
@@ -224,26 +264,42 @@ export default {
     padding-top: 40px;
     position: relative;
     .tree-item-border {
-      border-right: 1px solid #000;
+      border-right: 1px solid #999;
       position: absolute;
       height: 100%;
       top: 0;
       left: 50%;
     }
     .tree-item-content {
-      padding: 10px;
-      border: 1px solid #ccc;
       background: #fff;
       z-index: 999;
       position: relative;
       cursor: pointer;
+      border-radius: 4px;
+      box-shadow: 0 0 10px #ccc;
+      .tree-item-content-title {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        border-bottom: 1px solid #ccc;
+        word-break: break-all;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+      }
+      .tree-item-content-content {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        word-break: break-all;
+        padding: 20px 15px;
+      }
       .tree-item-content-close {
         position: absolute;
         cursor: pointer;
-        font-size: 20px;
-        color: #1890ff;
+        font-size: 14px;
+        color: #999;
         right: 5px;
-        top: 5px;
+        top: 10px;
       }
     }
   }
@@ -256,7 +312,7 @@ export default {
     flex-direction: column;
     align-items: center;
     .tree-item-border {
-      border-right: 1px solid #000;
+      border-right: 1px solid #999;
       position: absolute;
       height: 100%;
       top: 0;
