@@ -1,4 +1,5 @@
 const path = require("path")
+const IS_PROD = ['production', 'test'].includes(process.env.NODE_ENV)
 
 function resolve(dir) {
     return path.join(__dirname, dir);
@@ -38,11 +39,18 @@ module.exports = {
     },
     // 配置less
     css: {
-        loaderOptions: {
-            less: {
-                javascriptEnabled: true,
-            }
+      // 是否使用css分离插件 ExtractTextPlugin
+      extract: IS_PROD,
+      // 开启 CSS source maps?
+      sourceMap: false,
+      // css预设器配置项
+      loaderOptions: {
+        less: {
+          javascriptEnabled: true,
         }
-    },
+      },
+      // 启用 CSS modules for all css / pre-processor files.
+      modules: false,
+    }
 
 }

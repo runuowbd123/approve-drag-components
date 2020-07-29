@@ -1,11 +1,23 @@
 <template>
   <div class="process">
     <div class="left">
-      <tree :process="process" />
+      <tree
+        :process="process"
+        @addCondition="addCondition"
+        @addChildNode="addChildNode"
+        @addChildNodeEnd="addChildNodeEnd"
+        @deleteCondition="deleteCondition"
+        @deleteChildNode="deleteChildNode"
+      />
     </div>
-    <div class="right">
+    <!-- <div class="right">
       <div class="title">title</div>
-    </div>
+    </div>-->
+    <a-button
+      type="primary"
+      style="position: absolute; top: -50px;right: 200px;z-index: 99999"
+      @click="save"
+    >保存</a-button>
   </div>
 </template>
 
@@ -20,33 +32,170 @@ export default {
       process: {
         title: "发起人",
         content: "所有人",
-        root: true,
-        conditions: [
-          {
-            title: "条件1",
-            content: "条件1content"
-          },
-          {
-            title: "条件2",
-            content: "条件2content"
-          }
-        ],
+        isRoot: true,
         childNode: {
-          title: "审批人1",
-          content: "qwewe1"
+          // conditions: [
+          //   {
+          //     title: "条件1",
+          //     content: "条件1content",
+          //     childNode: {
+          //       conditions: [
+          //         {
+          //           title: "条件1-1",
+          //           content: "条件1-1content"
+          //         },
+          //         {
+          //           title: "条件1-2",
+          //           content: "条件2content"
+          //         }
+          //       ]
+          //     }
+          //   },
+          //   {
+          //     title: "条件2",
+          //     content: "条件2content",
+          //     childNode: {
+          //       title: "节点审批人",
+          //       content: "节点审批人",
+          //       conditions: [
+          //         {
+          //           title: "条件2-1",
+          //           content: "条件1-1content"
+          //         },
+          //         {
+          //           title: "条件2-2",
+          //           content: "条件2content"
+          //         }
+          //       ]
+          //     }
+          //   }
+          // ],
+          childNode: {
+            conditions: [
+              {
+                title: "条件1",
+                content: "条件1content"
+              },
+              {
+                title: "条件2",
+                content: "条件2content"
+              },
+              {
+                title: "条件3",
+                content: "条件3content"
+              }
+            ]
+          }
         }
       }
     };
+  },
+  methods: {
+    addCondition(process) {
+      // 添加条件
+      process.conditions.push({
+        title: "条件X",
+        content: "条件XX"
+      });
+    },
+    deleteCondition(item, process, parent) {
+      // 删除条件
+      console.log('--删除对象--',item,'删除对象所在的对象节点' , process,'删除对象所在的对象节点的父对象' ,parent);
+    },
+    addChildNode(process, type) {
+      // 正常节点下的加号
+      let newProcess = JSON.parse(JSON.stringify(process));
+      if (type === "condition") {
+        process.conditions = [
+          {
+            title: "条件新1",
+            content: "条件"
+          },
+          {
+            title: "条件新2",
+            content: "条件"
+          }
+        ];
+        process.childNode = {
+          ...newProcess,
+          isRoot: false
+        };
+        delete process.childNode.content;
+        delete process.childNode.title;
+      } else {
+        // process.conditions = undefined;
+        delete process.conditions;
+        process.childNode = {
+          ...newProcess,
+          title: "新节点",
+          content: "新节点",
+          isRoot: false
+        };
+      }
+      this.process = JSON.parse(JSON.stringify(this.process));
+      console.log(process,this.process);
+    },
+    addChildNodeEnd(process, type) {
+      // 条件节点下的加号和条件闭合之后下面的加号
+      let childNode = JSON.parse(JSON.stringify(process.childNode || {}));
+      console.log(childNode, type);
+      if (type === "condition") {
+        process.childNode = {
+          conditions: [
+            {
+              title: "end条件1",
+              content: "条件1content"
+            },
+            {
+              title: "end条件2",
+              content: "条件2content"
+            }
+          ],
+          childNode: {
+            ...childNode
+          }
+        };
+      } else {
+        process.childNode = {
+          title: "新节点11",
+          content: "新节点11",
+          isRoot: false,
+          childNode: {
+            ...childNode
+          }
+        };
+      }
+      this.process = JSON.parse(JSON.stringify(this.process));
+      console.log(process, this.process);
+    },
+    deleteChildNode(process, parent) {
+      //删除节点
+      if(process.conditions && process.conditions.length > 0) { // 当前部分对象中有条件conditions字段
+        parent.childNode = {
+          conditions: process.conditions,
+          childNode: process.childNode
+        }
+        console.log(parent.childNode)
+
+      } else { // 当前部分对象中无条件conditions字段
+        parent.childNode = process.childNode
+      }
+      this.process = JSON.parse(JSON.stringify(this.process));
+      console.log(this.process);
+    },
+    save() {
+      console.log(this.process);
+    }
   }
 };
 </script>
 
 <style lang="less" scoped>
 .process {
-  background: #fff;
+  background: #f5f5f7;
   display: flex;
   height: calc(100vh - 80px);
-
+  position: relative;
   .left {
     flex: 1;
     text-align: center;

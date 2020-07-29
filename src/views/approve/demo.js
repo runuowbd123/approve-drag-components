@@ -1,5 +1,5 @@
 const obj = {
-  processConfig: {
+  processConfig1: {
     "type": "start",
     "name": "发起人",
     "nodeId": "sid-startevent",
@@ -85,6 +85,88 @@ const obj = {
             }]
           }
         }
+      }
+    }
+  },
+  p2: {
+    "type": "start",
+    "name": "发起人",
+    "nodeId": "sid-startevent",
+    "properties": {},
+    "childNode": {
+      "type": "route",
+      "prevId": "sid-startevent",
+      "nodeId": "82d2_7870",
+      "conditionNodes": [{
+        "name": "条件1",
+        "type": "condition",
+        "prevId": "82d2_7870",
+        "nodeId": "579f_1d36",
+        "properties": {
+          "conditions": [
+            [{
+              "paramKey": "dingtalk_origin_dept",
+              "type": "dingtalk_actioner_dept_condition",
+              "paramLabel": "发起人",
+              "isEmpty": false,
+              "conds": [{
+                "type": "user",
+                "value": "142634263238210868",
+                "attrs": {
+                  "name": "韩晟昊",
+                  "avatar": ""
+                }
+              }]
+            }]
+          ]
+        }
+      }, {
+        "name": "条件2",
+        "type": "condition",
+        "prevId": "82d2_7870",
+        "nodeId": "1132_5c1f",
+        "properties": {
+          "conditions": []
+        }
+      }],
+      "properties": {},
+      "childNode": {
+        "type": "route",
+        "prevId": "82d2_7870",
+        "nodeId": "03d7_c3a1",
+        "conditionNodes": [{
+          "name": "条件1",
+          "type": "condition",
+          "prevId": "03d7_c3a1",
+          "nodeId": "08db_64bf",
+          "properties": {
+            "conditions": [
+              [{
+                "paramKey": "dingtalk_origin_dept",
+                "type": "dingtalk_actioner_dept_condition",
+                "paramLabel": "发起人",
+                "isEmpty": false,
+                "conds": [{
+                  "type": "user",
+                  "value": "142634263238210868",
+                  "attrs": {
+                    "name": "韩晟昊",
+                    "avatar": ""
+                  }
+                }]
+              }]
+            ]
+          }
+        }, {
+          "name": "条件2",
+          "type": "condition",
+          "prevId": "03d7_c3a1",
+          "nodeId": "aa0c_fc5b",
+          "properties": {
+            "conditions": []
+          }
+        }],
+        "properties": {}
       }
     }
   }
