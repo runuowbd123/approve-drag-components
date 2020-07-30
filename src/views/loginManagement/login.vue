@@ -60,7 +60,7 @@ export default {
     };
   },
   created() {
-    this.getCodeImgUrl();
+    // this.getCodeImgUrl();
   },
   methods: {
     getCodeImgUrl() {
@@ -76,6 +76,7 @@ export default {
       });
     },
     handleSubmit(e) {
+      e.preventDefault();
       this.$router.push("/process");
       // e.preventDefault();
       // this.form.validateFields((err, values) => {

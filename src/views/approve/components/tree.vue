@@ -3,7 +3,7 @@
     <!-- 当前节点信息 -->
     <div
       style="display: flex; flex-direction:column;align-items: center;background: #f5f5f7;"
-      v-if="process.title"
+      v-if="process.type && process.type !== 'end'"
     >
       <div class="tree-item">
         <div
@@ -142,6 +142,7 @@
       @deleteCondition="deleteCondition"
       @deleteChildNode="deleteChildNode"
     />
+    <div v-if="process.type==='end'" class="end-item">流程结束</div>
   </div>
 </template>
 
@@ -335,5 +336,13 @@ export default {
     padding: 10px;
     cursor: pointer;
   }
+}
+.end-item {
+  width: 80px;
+  padding: 10px 0;
+  box-shadow: 0 0 10px #ccc;
+  background: #fff;
+  border-radius: 15px;
+  margin: 0 auto;
 }
 </style>
