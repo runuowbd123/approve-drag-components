@@ -577,7 +577,7 @@ export default {
       console.log(this.componentList);
     },
     changeComponentFormula(formulaList) {
-      // 计算公式更爱
+      // 计算公式更改
       console.log(formulaList, "计算公式数组");
       this.componentList = this.componentList.map(item => {
         if (item.id === this.clickItemId) {

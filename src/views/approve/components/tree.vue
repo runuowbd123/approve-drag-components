@@ -11,7 +11,7 @@
           v-if="process.isRoot"
         ></div>
         <div class="tree-item-border"></div>
-        <div class="tree-item-content">
+        <div class="tree-item-content" :style="process.isRoot? 'cursor: default': ''" @click="clickItem(process)">
           <a-icon
             type="close"
             class="tree-item-content-close"
@@ -59,7 +59,7 @@
       >
         <div class="tree-item">
           <div class="tree-item-border"></div>
-          <div class="tree-item-content">
+          <div class="tree-item-content" @click="clickItem(item, process)">
             <a-icon
               type="close"
               class="tree-item-content-close"
@@ -102,6 +102,7 @@
           @addChildNodeEnd="addChildNodeEnd"
           @deleteCondition="deleteCondition"
           @deleteChildNode="deleteChildNode"
+          @clickItem="clickItem"
         />
         <div class="condition-vertival"></div>
         <div class="border-bottom-right" v-if="index === 0" />
@@ -141,6 +142,7 @@
       @addChildNodeEnd="addChildNodeEnd"
       @deleteCondition="deleteCondition"
       @deleteChildNode="deleteChildNode"
+      @clickItem="clickItem"
     />
     <div v-if="process.type==='end'" class="end-item">流程结束</div>
   </div>
@@ -183,6 +185,11 @@ export default {
     },
     deleteCondition(index, process, parent) {
       this.$emit("deleteCondition", index, process, parent);
+    },
+    clickItem(process, conditionsProcess) {
+      if(!process.isRoot) {
+        this.$emit("clickItem", process, conditionsProcess);
+      }
     }
   }
 };

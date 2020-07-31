@@ -8,14 +8,20 @@
         @addChildNodeEnd="addChildNodeEnd"
         @deleteCondition="deleteCondition"
         @deleteChildNode="deleteChildNode"
+        @clickItem="clickItem"
       />
     </div>
-    <!-- <div class="right">
-      <div class="title">title</div>
-    </div>-->
+    <drawer
+      v-if="visible"
+      :visible="visible"
+      :formData="formData"
+      :formDataParentConditions="formDataParentConditions"
+      @save="saveFormData"
+      @close="closeDrawer"
+    />
     <a-button
       type="primary"
-      style="position: absolute; top: -50px;right: 200px;z-index: 99999"
+      style="position: absolute; top: -50px;right: 200px;z-index: 9"
       @click="save"
     >保存</a-button>
   </div>
@@ -23,17 +29,24 @@
 
 <script>
 import Tree from "./components/tree";
+import drawer from "./components/processDrawer";
 export default {
   components: {
-    Tree
+    Tree,
+    drawer
   },
   data() {
     return {
+      visible: false,
+      formData: {},
+      formDataParentConditions: [],
+      currentProcess: {},
       process: {
         title: "发起人",
         content: "所有人",
         type: "originator",
         isRoot: true,
+
         childNode: {
           conditions: [
             {
@@ -44,12 +57,7 @@ export default {
             {
               title: "条件2",
               content: "条件2content",
-              sort: 1,
-              childNode: {
-                title: "节点审批人",
-                content: "节点审批人",
-                type: "approval"
-              }
+              sort: 1
             },
             {
               title: "条件3",
@@ -58,13 +66,49 @@ export default {
             }
           ],
           childNode: {
-            type: 'end'
+            title: "222",
+            content: "222",
+            type: "approval",
+            childNode: {
+              type: "end"
+            }
           }
         }
       }
     };
   },
   methods: {
+    clickItem(process, conditionsProcess) {
+      console.log(process, conditionsProcess);
+      this.formData = JSON.parse(JSON.stringify(process));
+      if(conditionsProcess) {
+        this.formDataParentConditions = conditionsProcess.conditions
+      }
+      this.currentProcess = process;
+      this.visible = true;
+    },
+    closeDrawer() {
+      this.visible = false;
+    },
+    saveFormData(newData, originSort) {
+      console.log(newData, originSort);
+      if (this.currentProcess.type) {
+        this.currentProcess = Object.assign(this.currentProcess, newData);
+      } else {
+        this.currentProcess = Object.assign(this.currentProcess, newData);
+        this.formDataParentConditions.splice(originSort, 1);
+        this.formDataParentConditions.splice(
+          this.currentProcess.sort,
+          0,
+          this.currentProcess
+        );
+        this.formDataParentConditions.forEach((item, index) => {
+          item.sort = index;
+        });
+        console.log(this.formDataParentConditions);
+      }
+      this.closeDrawer();
+    },
     addCondition(process) {
       // 添加条件
       let sort = process.conditions.length;
@@ -92,13 +136,13 @@ export default {
         }
       } else {
         process.conditions.splice(index, 1);
+        process.conditions = process.conditions.map((item, index) => {
+          return {
+            ...item,
+            sort: index
+          };
+        });
       }
-      process.conditions = process.conditions.map((item,index) => {
-        return {
-          ...item,
-          sort: index
-        }
-      })
       this.process = JSON.parse(JSON.stringify(this.process));
       console.log(this.process);
     },
@@ -203,14 +247,6 @@ export default {
     flex: 1;
     text-align: center;
     overflow: auto;
-  }
-  .right {
-    flex: none;
-    width: 350px;
-    border-left: 1px solid #ccc;
-    .title {
-      padding: 10px;
-    }
   }
 }
 </style>

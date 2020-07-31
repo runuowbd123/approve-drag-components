@@ -77,25 +77,25 @@ export default {
     return {
       formulaList: [], // textarea中显示的计算公式
       symbolList: [
-        { label: "+" },
-        { label: "-" },
-        { label: "×" },
-        { label: "÷" },
-        { label: "(" },
-        { label: ")" }
+        { label: "+", key: "+" },
+        { label: "-", key: "-" },
+        { label: "×", key: "*" },
+        { label: "÷", key: "/" },
+        { label: "(", key: "(" },
+        { label: ")", key: ")" }
       ], // 符号数组
       numberList: [
-        { label: "1" },
-        { label: "1" },
-        { label: "2" },
-        { label: "3" },
-        { label: "4" },
-        { label: "5" },
-        { label: "6" },
-        { label: "7" },
-        { label: "8" },
-        { label: "9" },
-        { label: "." }
+        { label: "0", key: "0" },
+        { label: "1", key: "1" },
+        { label: "2", key: "2" },
+        { label: "3", key: "3" },
+        { label: "4", key: "4" },
+        { label: "5", key: "5" },
+        { label: "6", key: "6" },
+        { label: "7", key: "7" },
+        { label: "8", key: "8" },
+        { label: "9", key: "9" },
+        { label: ".", key: "." }
       ]
     };
   },
@@ -123,15 +123,39 @@ export default {
       this.formulaList.push(targetObj);
     },
     back() {
-      this.formulaList.pop()
+      this.formulaList.pop();
     },
     clear() {
       this.formulaList = [];
     },
     onOk() {
       if (this.toolList && this.toolList.length > 0) {
-        this.$emit("changeComponentFormula", this.formulaList);
-        this.formulaList = [];
+        console.log("----计算公式数组", this.formulaList);
+        let formulaIsError = false;
+        let formulaString = "";
+        this.formulaList.forEach(item => {
+          if (item.type) {
+            formulaString += 1;
+          } else {
+            formulaString += item.key;
+          }
+        });
+        console.log("------计算公式字符串", formulaString);
+        try {
+          let number = eval(formulaString);
+          console.log(number, "计算公式得到的结果");
+          if (isNaN(number)) {
+            formulaIsError = true;
+          }
+        } catch (e) {
+          formulaIsError = true;
+        }
+        if (formulaIsError) {
+          this.$message.error("编辑的公式不符合计算法则，无法计算");
+        } else {
+          this.$emit("changeComponentFormula", this.formulaList);
+          this.formulaList = [];
+        }
       } else {
         this.$message.error("无可选控件无法设置公式，请先添加可选控件");
       }
