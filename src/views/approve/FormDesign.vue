@@ -249,7 +249,7 @@
               type="close-circle"
               v-if="item.id === clickItemId"
               class="close"
-              @click.stop="deleteItem(index)"
+              @click.stop="deleteItem(index, item)"
             />
           </div>
         </draggable>
@@ -259,7 +259,7 @@
     <!-- 右侧组件详情部分 -->
     <div class="component-detail">
       <div class="title">{{clickItem.name}}</div>
-      <!-- 单行输入框,多行输入框,数字输入框, 单选框，多选框, 日期, 联系人, 部门 -->
+      <!-- 单行输入框,多行输入框,数字输入框,金额, 单选框，多选框, 日期, 联系人, 部门 -->
       <div
         v-if="clickItem.type === 'input' || clickItem.type === 'textArea' || clickItem.type === 'number' || clickItem.type === 'money' || clickItem.type === 'radio' || clickItem.type === 'checkbox' || clickItem.type === 'datepicker' || clickItem.type === 'contact' || clickItem.type === 'department'"
         class="component-detail-item"
@@ -397,7 +397,9 @@
         <div class="component-detail-item-content formula" @click="formulaModalShow=true">
           <div class="formula-item">
             计算结果 =
-            <span v-for="(it,ind) in clickItem.formulaList" :key="ind">{{it.label}}{{" "}}</span>
+            <template v-for="(it,ind) in clickItem.formulaList">
+              <span :key="ind" :class="it.type ? 'formula-item-gray' : ''">{{it.label}}{{" "}}</span>
+            </template>
           </div>
         </div>
         <div class="component-detail-item-title">验证（勾选后可作为流程条件）</div>
@@ -509,8 +511,18 @@ export default {
     return {
       activeTab: "1",
       components, // 可选组件
-      componentList: [], // 中间手机端添加的组件
-      count: 20, // y用于拖拽新组建生成的id
+      componentList: [
+        {
+          category: "number",
+          id: 21,
+          label: "金额",
+          name: "金额",
+          placeholder: "请输入金额",
+          required: false,
+          type: "money"
+        }
+      ], // 中间手机端添加的组件
+      count: 22, // y用于拖拽新组建生成的id
       clickItemId: null, // 选择的组件id
       formulaModalShow: false // 计算公式弹窗
     };
@@ -524,7 +536,7 @@ export default {
     },
     toolList() {
       const toolList = this.componentList.filter(item => {
-        return item.category === "number" && item.type !== "formula";
+        return item.type === "money" || item.type === 'number';
       });
       return toolList || [];
     }
@@ -543,10 +555,15 @@ export default {
       }
       console.log(this.componentList);
     },
-    deleteItem(index) {
+    deleteItem(index, item) {
       // 删除组件
+      console.log(item)
       this.componentList.splice(index, 1);
       this.clickItemId = null;
+      // todo: 当删除金额和数字输入框的时候要清空对应用到这两个组件的计算公式
+      if(true){
+
+      }
     },
     clickComponent(target) {
       // 点击选中组件
@@ -647,7 +664,7 @@ export default {
     padding: 30px 20px;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px #ccc;;
+    box-shadow: 0px 0px 10px #ccc;
   }
   .list-group-item1 {
     position: relative;
@@ -740,6 +757,15 @@ export default {
       padding-bottom: 0;
       .formula-item {
         margin: 0 5px 10px 0;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        .formula-item-gray {
+          margin: 0 5px;
+          padding: 4px;
+          border-radius: 4px;
+          background: #f0f0f0;
+        }
       }
     }
   }

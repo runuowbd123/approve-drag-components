@@ -43,7 +43,7 @@
               <span slot="title">
                 <img :src="require(`../../assets/images/${item.activeLogo}`)" alt class="white"  v-if="item.activeLogo" />
                 <img :src="require(`../../assets/images/${item.logo}`)" alt class="black"  v-if="item.logo" />
-                <span>{{item.title}}</span>
+                <span style="margin: 0 auto">{{item.title}}</span>
               </span>
               <template v-for="it in item.children">
                 <a-menu-item
@@ -60,7 +60,7 @@
             <!-- v-if="(info.curr.moduleIds || []).includes(item.permission) || item.permission === 'always'" -->
               <img :src="require(`../../assets/images/${item.activeLogo}`)" alt class="white" v-if="item.activeLogo" />
               <img :src="require(`../../assets/images/${item.logo}`)" alt class="black" v-if="item.logo"/>
-              {{item.title}}
+              <span style="margin: 0 auto">{{item.title}}</span>
             </a-menu-item>
           </template>
         </template>

@@ -133,16 +133,23 @@ export default {
         console.log("----计算公式数组", this.formulaList);
         let formulaIsError = false;
         let formulaString = "";
-        this.formulaList.forEach(item => {
+        //遍历将计算公式数组转化成字符串
+        this.formulaList.forEach((item, index) => {
           if (item.type) {
-            formulaString += 1;
+            formulaString += '1.1';
+            const previousKey = (this.formulaList[index - 1] || {}).label;
+            const nextKey = (this.formulaList[index + 1] || {}).label;
+            const numberString ='0123456789.'
+            if(numberString.includes(previousKey) || numberString.includes(nextKey)){ // 控件前后不能输入数字
+              formulaIsError = true;
+            }
           } else {
             formulaString += item.key;
           }
         });
         console.log("------计算公式字符串", formulaString);
         try {
-          let number = eval(formulaString);
+          let number = eval(formulaString); // 如果公式字符串不成立则会报错，需要用try，catch
           console.log(number, "计算公式得到的结果");
           if (isNaN(number)) {
             formulaIsError = true;
