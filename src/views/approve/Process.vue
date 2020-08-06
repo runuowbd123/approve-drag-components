@@ -46,7 +46,6 @@ export default {
         content: "所有人",
         type: "originator",
         isRoot: true,
-
         childNode: {
           conditions: [
             {
@@ -81,8 +80,8 @@ export default {
     clickItem(process, conditionsProcess) {
       console.log(process, conditionsProcess);
       this.formData = JSON.parse(JSON.stringify(process));
-      if(conditionsProcess) {
-        this.formDataParentConditions = conditionsProcess.conditions
+      if (conditionsProcess) {
+        this.formDataParentConditions = conditionsProcess.conditions;
       }
       this.currentProcess = process;
       this.visible = true;
@@ -162,10 +161,16 @@ export default {
             sort: 1
           }
         ];
-        process.childNode = {
-          childNode: newProcess.childNode,
-          conditions: newProcess.conditions
-        };
+        if (newProcess.conditions) {
+          process.childNode = {
+            childNode: newProcess.childNode,
+            conditions: newProcess.conditions
+          };
+        } else {
+          process.childNode = {
+            ...newProcess.childNode
+          };
+        }
       } else {
         delete process.conditions;
         process.childNode = {

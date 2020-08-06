@@ -529,7 +529,7 @@ export default {
   },
   computed: {
     clickItem() {
-      const targetObj = this.componentList.find(item => {
+      const targetObj = (this.componentList || []).find(item => {
         return item.id === this.clickItemId;
       });
       return targetObj || { name: "无" };
@@ -557,12 +557,32 @@ export default {
     },
     deleteItem(index, item) {
       // 删除组件
-      console.log(item)
+      console.log(item, this.componentList)
       this.componentList.splice(index, 1);
       this.clickItemId = null;
-      // todo: 当删除金额和数字输入框的时候要清空对应用到这两个组件的计算公式
-      if(true){
-
+      // 当删除金额和数字输入框的时候要清空对应用到这两个组件的计算公式 // todo: 简化这里的遍历
+      if(item.type === "money" || item.type === 'number'){
+        this.componentList = this.componentList.map((component) => {
+          if(component.type === "formula") {
+            const formulaList = component.formulaList || [];
+            let flag = true;
+            formulaList.forEach((formula) => {
+              if(formula.id === item.id) {
+                flag = false;
+              }
+            });
+            if(flag) {
+              return component;
+            } else {
+              return {
+                ...component,
+                formulaList: []
+              };
+            }
+          } else {
+            return component
+          }
+        })
       }
     },
     clickComponent(target) {
