@@ -148,7 +148,7 @@ export default {
     addChildNode(process, type) {
       // 正常节点下的加号
       let newProcess = JSON.parse(JSON.stringify(process));
-      if (type === "condition") {
+      if (type === "condition") { // TODO: 要看this.process数据结构，看看condition是否可以跟节点放在同级，不行的话这个方法要改
         process.conditions = [
           {
             title: "条件1",

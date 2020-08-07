@@ -560,13 +560,12 @@ export default {
       console.log(item, this.componentList)
       this.componentList.splice(index, 1);
       this.clickItemId = null;
-      // 当删除金额和数字输入框的时候要清空对应用到这两个组件的计算公式 // todo: 简化这里的遍历
+      // 当删除金额和数字输入框的时候要清空对应用到这两个组件的计算公式
       if(item.type === "money" || item.type === 'number'){
         this.componentList = this.componentList.map((component) => {
           if(component.type === "formula") {
-            const formulaList = component.formulaList || [];
             let flag = true;
-            formulaList.forEach((formula) => {
+            component.formulaList.forEach((formula) => {
               if(formula.id === item.id) {
                 flag = false;
               }
