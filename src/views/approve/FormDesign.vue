@@ -85,7 +85,23 @@
             >{{ item.name }}</div>
           </draggable>
         </a-tab-pane>
-        <a-tab-pane key="2" tab="控件组">Content of Tab Pane 2</a-tab-pane>
+        <a-tab-pane key="2" tab="控件组">
+          <div class="title">出勤</div>
+          <draggable
+            class="list-group"
+            :list="components.attendance"
+            :group="{ name: 'comp', pull: 'clone', put: false }"
+            @change="log"
+            :options="{sort: false}"
+            filter=".undraggable"
+          >
+            <div
+              class="list-group-item"
+              v-for="item in components.attendance"
+              :key="item.id"
+            >{{ item.name }}</div>
+          </draggable>
+        </a-tab-pane>
       </a-tabs>
     </div>
 
@@ -243,6 +259,60 @@
                   <a-icon type="folder-add" style="font-size: 18px" v-if="item.type==='annex'" />
                 </div>
               </div>
+            </template>
+            <!-- 请假/调休套件 -->
+            <template v-if="item.type==='leave'">
+              <div class="date-range">
+                <div class="date-range-title">
+                  请假类型
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <!-- 这个是灰色的小间距 -->
+              <div style="background: rgb(243, 243, 243);height: 10px;width: 100%" />
+              <div class="date-range">
+                <div class="date-range-title">
+                  开始日期
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择日期</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  结束日期
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择日期</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  时长
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">自动计算</div>
+                  <van-icon name="arrow" style="margin-left: 5px;visibility: hidden;" />
+                </div>
+              </div>
+              <!-- 这个是灰色的小间距 -->
+              <div style="background: rgb(243, 243, 243);height: 10px;width: 100%" />
+              <div class="date-range">
+                <div class="date-range-title">
+                  请假事由
+                  <div class="red" v-if="item.required">*</div>
+                </div>
+              </div>
+              <div style="color: #999;padding-left: 10px">请输入请假事由</div>
             </template>
 
             <a-icon
@@ -480,6 +550,22 @@
           </div>
         </template>
       </div>
+      <div v-if="clickItem.type === 'leave'" class="component-detail-item">
+        <div class="component-detail-item-title">请假类型</div>
+        <a-table
+          :columns="leaveTypeColumn"
+          :dataSource="leaveTypeData"
+          :rowKey="record => JSON.stringify(record)"
+          :pagination="false"
+          :showHeader="false"
+          :bordered="true"
+          class="leave-table"
+        />
+        <div class="component-detail-item-title" style="margin-top: 20px">验证（勾选后可作为流程条件）</div>
+        <div class="component-detail-item-content">
+          <a-checkbox v-model="clickItem.required">必填</a-checkbox>
+        </div>
+      </div>
     </div>
 
     <a-button
@@ -509,22 +595,22 @@ export default {
   },
   data() {
     return {
-      activeTab: "1",
+      activeTab: "2",
       components, // 可选组件
-      componentList: [
-        {
-          category: "number",
-          id: 21,
-          label: "金额",
-          name: "金额",
-          placeholder: "请输入金额",
-          required: false,
-          type: "money"
-        }
-      ], // 中间手机端添加的组件
-      count: 22, // y用于拖拽新组建生成的id
+      componentList: [], // 中间手机端添加的组件
+      count: 1, // y用于拖拽新组建生成的id
       clickItemId: null, // 选择的组件id
-      formulaModalShow: false // 计算公式弹窗
+      formulaModalShow: false, // 计算公式弹窗
+      leaveTypeColumn: [
+        { title: "类型", dataIndex: "type", width: "50%" },
+        { title: "时间", dataIndex: "time", width: "50%" }
+      ], // 请假套件右侧表格表头
+      leaveTypeData: [
+        { type: "事假", time: "按小时" },
+        { type: "调休", time: "按小时" },
+        { type: "年假", time: "按半天" },
+        { type: "病假", time: "按半天" }
+      ] //请假套件右侧表格内容
     };
   },
   computed: {
@@ -536,7 +622,7 @@ export default {
     },
     toolList() {
       const toolList = this.componentList.filter(item => {
-        return item.type === "money" || item.type === 'number';
+        return item.type === "money" || item.type === "number";
       });
       return toolList || [];
     }
@@ -557,20 +643,20 @@ export default {
     },
     deleteItem(index, item) {
       // 删除组件
-      console.log(item, this.componentList)
+      console.log(item, this.componentList);
       this.componentList.splice(index, 1);
       this.clickItemId = null;
       // 当删除金额和数字输入框的时候要清空对应用到这两个组件的计算公式
-      if(item.type === "money" || item.type === 'number'){
-        this.componentList = this.componentList.map((component) => {
-          if(component.type === "formula") {
+      if (item.type === "money" || item.type === "number") {
+        this.componentList = this.componentList.map(component => {
+          if (component.type === "formula") {
             let flag = true;
-            component.formulaList.forEach((formula) => {
-              if(formula.id === item.id) {
+            component.formulaList.forEach(formula => {
+              if (formula.id === item.id) {
                 flag = false;
               }
             });
-            if(flag) {
+            if (flag) {
               return component;
             } else {
               return {
@@ -579,9 +665,9 @@ export default {
               };
             }
           } else {
-            return component
+            return component;
           }
-        })
+        });
       }
     },
     clickComponent(target) {
@@ -798,6 +884,18 @@ export default {
       margin: 0;
       width: 50%;
       text-align: center;
+    }
+  }
+}
+.leave-table {
+  padding: 0 10px;
+  .ant-table-body {
+    table {
+      .ant-table-thead tr th,
+      .ant-table-tbody tr td {
+        padding: 10px;
+        text-align: center;
+      }
     }
   }
 }
