@@ -169,7 +169,7 @@ const components= {
     },
     {
       category: 'attendance',
-      type: 'repalcement',
+      type: 'replacement',
       name: '补卡套件',
       id: 'c18',
     }

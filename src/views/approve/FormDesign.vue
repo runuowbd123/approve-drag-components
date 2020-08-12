@@ -86,6 +86,7 @@
           </draggable>
         </a-tab-pane>
         <a-tab-pane key="2" tab="控件组">
+          <!-- 出勤控件组 -->
           <div class="title">出勤</div>
           <draggable
             class="list-group"
@@ -313,6 +314,19 @@
                 </div>
               </div>
               <div style="color: #999;padding-left: 10px">请输入请假事由</div>
+            </template>
+            <!-- 补卡套件 -->
+            <template v-if="item.type === 'replacement'">
+              <div class="date-range">
+                <div class="date-range-title">
+                  补卡时间
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择补卡时间</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
             </template>
 
             <a-icon
@@ -550,6 +564,7 @@
           </div>
         </template>
       </div>
+      <!-- 请假/调休套件 -->
       <div v-if="clickItem.type === 'leave'" class="component-detail-item">
         <div class="component-detail-item-title">请假类型</div>
         <a-table
@@ -565,6 +580,14 @@
         <div class="component-detail-item-content">
           <a-checkbox v-model="clickItem.required">必填</a-checkbox>
         </div>
+      </div>
+      <!-- 补卡套件 -->
+      <div v-if="clickItem.type === 'replacement'" class="component-detail-item">
+        <div class="component-detail-item-title">补卡申请通过后，会更改员工考勤状态</div>
+        <div style="margin: 10px 0;color: #999">1. 修改缺卡记录为正常</div>
+        <div style="margin: 10px 0;color: #999">2. 加班忘打卡可以补加班卡</div>
+        <div style="margin: 10px 0;color: #999">3. 上班忘打卡，可以通过补卡更新为正常。</div>
+        
       </div>
     </div>
 
