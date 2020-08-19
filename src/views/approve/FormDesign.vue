@@ -10,7 +10,7 @@
             class="list-group"
             :list="components.text"
             :group="{ name: 'comp', pull: 'clone', put: false }"
-            @change="log"
+            @change="dragChange"
             :options="{sort: false}"
             filter=".undraggable"
           >
@@ -26,7 +26,7 @@
             class="list-group"
             :list="components.number"
             :group="{ name: 'comp', pull: 'clone', put: false }"
-            @change="log"
+            @change="dragChange"
             :options="{sort: false}"
             filter=".undraggable"
           >
@@ -42,7 +42,7 @@
             class="list-group"
             :list="components.option"
             :group="{ name: 'comp', pull: 'clone', put: false }"
-            @change="log"
+            @change="dragChange"
             :options="{sort: false}"
             filter=".undraggable"
           >
@@ -58,7 +58,7 @@
             class="list-group"
             :list="components.date"
             :group="{ name: 'comp', pull: 'clone', put: false }"
-            @change="log"
+            @change="dragChange"
             :options="{sort: false}"
             filter=".undraggable"
           >
@@ -74,7 +74,7 @@
             class="list-group"
             :list="components.other"
             :group="{ name: 'comp', pull: 'clone', put: false }"
-            @change="log"
+            @change="dragChange"
             :options="{sort: false}"
             filter=".undraggable"
           >
@@ -92,7 +92,7 @@
             class="list-group"
             :list="components.attendance"
             :group="{ name: 'comp', pull: 'clone', put: false }"
-            @change="log"
+            @change="dragChange"
             :options="{sort: false}"
             filter=".undraggable"
           >
@@ -112,7 +112,7 @@
         <draggable
           :list="componentList"
           group="comp"
-          @change="log"
+          @change="dragChange"
           style="height: 545px;overflow: auto;background: #f3f3f3"
         >
           <div
@@ -611,6 +611,7 @@
 import draggable from "vuedraggable";
 import components from "./componentList";
 import formulaModal from "./components/formulaModal";
+
 export default {
   components: {
     draggable,
@@ -619,7 +620,7 @@ export default {
   data() {
     return {
       activeTab: "2",
-      components, // 可选组件
+      components: components.components, // 可选组件
       componentList: [], // 中间手机端添加的组件
       count: 1, // y用于拖拽新组建生成的id
       clickItemId: null, // 选择的组件id
@@ -651,7 +652,7 @@ export default {
     }
   },
   methods: {
-    log(evt) {
+    dragChange(evt) {
       // 移动组件触发函数
       console.log(evt);
       if (evt.added) {

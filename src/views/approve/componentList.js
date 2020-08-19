@@ -172,7 +172,35 @@ const components= {
       type: 'replacement',
       name: '补卡套件',
       id: 'c18',
+    },
+    {
+      category: 'attendance',
+      type: 'workovertime',
+      name: '加班',
+      id: 'c19',
     }
   ]
 };
-export default components
+
+const componentsName = {
+  input: '单行输入框',
+  textArea: '多行输入框',
+  explain: '说明文字',
+  number: '数字输入框',
+  money: '金额',
+  formula: '计算公式',
+  radio: '单选框',
+  checkbox: '多选框',
+  datepicker: '日期',
+  datepickerRange: '日期区间',
+  detail: '明细/表格',
+  address: '省市区',
+  picture: '图片',
+  contact: '联系人',
+  department: '部门',
+  annex: '附件',
+  leave: '请假/调休套件',
+  replacement: '补卡套件',
+  workovertime: '加班套件'
+}
+export default {components}
