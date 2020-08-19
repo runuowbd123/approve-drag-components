@@ -621,6 +621,7 @@ export default {
     return {
       activeTab: "2",
       components: components.components, // 可选组件
+      componentsName: components.componentsName, // 组件的对应名称
       componentList: [], // 中间手机端添加的组件
       count: 1, // y用于拖拽新组建生成的id
       clickItemId: null, // 选择的组件id

@@ -203,4 +203,4 @@ const componentsName = {
   replacement: '补卡套件',
   workovertime: '加班套件'
 }
-export default {components}
+export default {components,componentsName}
