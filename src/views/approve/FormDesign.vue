@@ -18,7 +18,7 @@
               class="list-group-item"
               v-for="item in components.text"
               :key="item.id"
-            >{{ item.name }}</div>
+            >{{ getcomponentName(item) }}</div>
           </draggable>
           <!-- 数值组件 -->
           <div class="title">数值</div>
@@ -34,7 +34,7 @@
               class="list-group-item"
               v-for="item in components.number"
               :key="item.id"
-            >{{ item.name }}</div>
+            >{{ getcomponentName(item) }}</div>
           </draggable>
           <!-- 选项 -->
           <div class="title">选项</div>
@@ -50,7 +50,7 @@
               class="list-group-item"
               v-for="item in components.option"
               :key="item.id"
-            >{{ item.name }}</div>
+            >{{ getcomponentName(item) }}</div>
           </draggable>
           <!-- 日期 -->
           <div class="title">日期</div>
@@ -66,7 +66,7 @@
               class="list-group-item"
               v-for="item in components.date"
               :key="item.id"
-            >{{ item.name }}</div>
+            >{{ getcomponentName(item) }}</div>
           </draggable>
           <!-- 其他 -->
           <div class="title">其他</div>
@@ -82,7 +82,7 @@
               class="list-group-item"
               v-for="item in components.other"
               :key="item.id"
-            >{{ item.name }}</div>
+            >{{ getcomponentName(item) }}</div>
           </draggable>
         </a-tab-pane>
         <a-tab-pane key="2" tab="控件组">
@@ -100,7 +100,7 @@
               class="list-group-item"
               v-for="item in components.attendance"
               :key="item.id"
-            >{{ item.name }}</div>
+            >{{ getcomponentName(item) }}</div>
           </draggable>
         </a-tab-pane>
       </a-tabs>
@@ -328,6 +328,39 @@
                 </div>
               </div>
             </template>
+            <!-- 加班套件 -->
+            <template v-if="item.type==='workovertime'">
+              <div class="date-range">
+                <div class="date-range-title">
+                  开始日期
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择日期</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  结束日期
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择日期</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  时长
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">自动计算</div>
+                  <van-icon name="arrow" style="margin-left: 5px;visibility: hidden;" />
+                </div>
+              </div>
+            </template>
 
             <a-icon
               type="close-circle"
@@ -342,7 +375,7 @@
 
     <!-- 右侧组件详情部分 -->
     <div class="component-detail">
-      <div class="title">{{clickItem.name}}</div>
+      <div class="title">{{getcomponentName(clickItem)}}</div>
       <!-- 单行输入框,多行输入框,数字输入框,金额, 单选框，多选框, 日期, 联系人, 部门 -->
       <div
         v-if="clickItem.type === 'input' || clickItem.type === 'textArea' || clickItem.type === 'number' || clickItem.type === 'money' || clickItem.type === 'radio' || clickItem.type === 'checkbox' || clickItem.type === 'datepicker' || clickItem.type === 'contact' || clickItem.type === 'department'"
@@ -587,7 +620,10 @@
         <div style="margin: 10px 0;color: #999">1. 修改缺卡记录为正常</div>
         <div style="margin: 10px 0;color: #999">2. 加班忘打卡可以补加班卡</div>
         <div style="margin: 10px 0;color: #999">3. 上班忘打卡，可以通过补卡更新为正常。</div>
-        
+      </div>
+      <!-- 加班套件 -->
+      <div v-if="clickItem.type === 'workovertime'" class="component-detail-item">
+        <div class="component-detail-item-title">加班时长单位：小时</div>
       </div>
     </div>
 
@@ -653,8 +689,14 @@ export default {
     }
   },
   methods: {
+    // 获取组件名
+    getcomponentName(item) {
+      const clickItemType = item.type;
+      const name = this.componentsName[clickItemType];
+      return name;
+    },
+    // 移动组件触发函数
     dragChange(evt) {
-      // 移动组件触发函数
       console.log(evt);
       if (evt.added) {
         this.count += 1;
@@ -666,8 +708,8 @@ export default {
       }
       console.log(this.componentList);
     },
+    // 删除组件
     deleteItem(index, item) {
-      // 删除组件
       console.log(item, this.componentList);
       this.componentList.splice(index, 1);
       this.clickItemId = null;
@@ -695,8 +737,8 @@ export default {
         });
       }
     },
+    // 点击选中组件
     clickComponent(target) {
-      // 点击选中组件
       console.log("click target", target);
       if (this.clickItemId === target.id) {
         this.clickItemId = null;
@@ -705,8 +747,8 @@ export default {
       }
       console.log(this.clickItemId);
     },
+    // 组件详情更改
     changeComponentE(name, e) {
-      // 组件详情更改
       console.log(name, e.target.value, this.clickItemId, this.componentList);
       this.componentList = this.componentList.map(item => {
         if (item.id === this.clickItemId) {
@@ -723,8 +765,8 @@ export default {
       });
       console.log(this.componentList);
     },
+    // 计算公式更改
     changeComponentFormula(formulaList) {
-      // 计算公式更改
       console.log(formulaList, "计算公式数组");
       this.componentList = this.componentList.map(item => {
         if (item.id === this.clickItemId) {
@@ -738,17 +780,21 @@ export default {
       this.formulaModalShow = false;
       console.log(this.componentList, "最新的组件数组");
     },
+    // 增加选项
     plusOption(optionList) {
       if (optionList.length < 20) {
         optionList.push({ name: "" });
       }
     },
+    // 删除选项
     deleteOption(optionList, index) {
       optionList.splice(index, 1);
     },
 
+
+    // 保存
     save() {
-      console.log(this.componentList);
+      console.log(this.componentList, JSON.stringify(this.componentList));
     }
   }
 };
