@@ -329,7 +329,52 @@
               </div>
             </template>
             <!-- 加班套件 -->
-            <template v-if="item.type==='workovertime'">
+            <template v-if="item.type==='workOvertime'">
+              <div class="date-range">
+                <div class="date-range-title">
+                  开始日期
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择日期</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  结束日期
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择日期</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  时长
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">自动计算</div>
+                  <van-icon name="arrow" style="margin-left: 5px;visibility: hidden;" />
+                </div>
+              </div>
+            </template>
+            <!-- 外出套件 -->
+            <template v-if="item.type==='goOut'">
+              <div class="date-range">
+                <div class="date-range-title">
+                  外出类型
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <!-- 这个是灰色的小间距 -->
+              <div style="background: rgb(243, 243, 243);height: 10px;width: 100%" />
               <div class="date-range">
                 <div class="date-range-title">
                   开始日期
@@ -622,8 +667,51 @@
         <div style="margin: 10px 0;color: #999">3. 上班忘打卡，可以通过补卡更新为正常。</div>
       </div>
       <!-- 加班套件 -->
-      <div v-if="clickItem.type === 'workovertime'" class="component-detail-item">
+      <div v-if="clickItem.type === 'workOvertime'" class="component-detail-item">
         <div class="component-detail-item-title">加班时长单位：小时</div>
+      </div>
+      <!-- 外出套件 -->
+      <div v-if="clickItem.type === 'goOut'" class="component-detail-item">
+        <div style="display: flex;align-items: center; margin: 10px 0 20px;">
+          <div>选择时长单位：</div>
+          <a-select v-model="clickItem.timeUnit" style="width: 150px">
+            <a-select-option value="hour">按小时</a-select-option>
+            <a-select-option value="halfDay">按半天</a-select-option>
+            <a-select-option value="day">按天</a-select-option>
+          </a-select>
+        </div>
+        <div class="component-detail-item-title">
+          外出类型
+          <span class="gray">每项最多20个字，最多20项</span>
+        </div>
+        <div class="component-detail-item-content">
+          <draggable class="list-group" :list="clickItem.typeList" :group="{ name: 'comp'}">
+            <div
+              v-for="(item,index) in clickItem.typeList"
+              :key="index"
+              style="display: flex;align-items:center;cursor: move;margin-top: 10px"
+            >
+              <a-icon type="menu" style="margin-right: 5px" />
+              <a-input
+                v-model="item.name"
+                style="width: 200px;margin-right: 10px;"
+                :maxLength="20"
+              />
+              <a-icon
+                type="plus-circle"
+                style="margin-right: 5px;color: rgb(51,153,51);font-size: 16px';cursor: pointer"
+                v-if="clickItem.typeList.length - 1 === index && clickItem.typeList.length < 20"
+                @click="plusOption(clickItem.typeList)"
+              />
+              <a-icon
+                type="minus-circle"
+                style="color: red;font-size: 14px;cursor: pointer"
+                v-if="clickItem.typeList.length !== 1"
+                @click="deleteOption(clickItem.typeList, index)"
+              />
+            </div>
+          </draggable>
+        </div>
       </div>
     </div>
 
@@ -790,7 +878,6 @@ export default {
     deleteOption(optionList, index) {
       optionList.splice(index, 1);
     },
-
 
     // 保存
     save() {

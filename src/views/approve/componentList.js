@@ -65,7 +65,7 @@ const components= {
   //     label: "单选框",
   //     placeholder: "请选择",
   //     required: false,
-  //     optionList: [{name: ''}]
+  //     optionList: [{name: '选项一'}]
   //   },
   //   {
   //     category: "option",
@@ -75,7 +75,7 @@ const components= {
   //     label: "多选框",
   //     placeholder: "请选择",
   //     required: false,
-  //     optionList: [{name: ''}]
+  //     optionList: [{name: '选项一'}]
   //   },
   // ],
   // date: [
@@ -175,9 +175,16 @@ const components= {
     },
     {
       category: 'attendance',
-      type: 'workovertime',
+      type: 'workOvertime',
       name: '加班套件',
       id: 'c19',
+    },
+    {
+      category: 'attendance',
+      type: 'goOut',
+      id: 'c20',
+      typeList: [{name: '选项一'}],
+      timeUnit: 'hour'
     }
   ]
 };
@@ -201,6 +208,7 @@ const componentsName = {
   annex: '附件',
   leave: '请假/调休套件',
   replacement: '补卡套件',
-  workovertime: '加班套件'
+  workOvertime: '加班套件',
+  goOut: '外出套件'
 }
 export default {components,componentsName}
