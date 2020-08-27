@@ -113,7 +113,8 @@
           :list="componentList"
           group="comp"
           @change="dragChange"
-          style="height: 545px;overflow: auto;background: #f3f3f3"
+          style="height: 545px;overflow: auto;background: #f3f3f3;border-radius:20px;padding: 10px 0;"
+          :options="{animation: 300}"
         >
           <div
             v-for="(item,index) in componentList"
@@ -924,9 +925,9 @@ export default {
   width: 340px;
   flex: none;
   .mobile-wrap {
-    padding: 30px 20px;
+    padding: 20px 20px;
     background: #fff;
-    border-radius: 10px;
+    border-radius: 30px;
     box-shadow: 0px 0px 10px #ccc;
   }
   .list-group-item1 {
@@ -937,11 +938,21 @@ export default {
     background-color: #fff;
     box-sizing: border-box;
     cursor: move;
-    margin: 10px 0;
+    margin: 15px 0;
   }
   .list-group-item-active {
     border: 1px solid #1890ff;
   }
+  // .sortable-chosen:before {
+  //   border-top: 2px solid red;
+  //   height: 10px;
+  //   width: 100%;
+  //   content: "";
+  //   display: block;
+  //   position: absolute;
+  //   top: -10px;
+  //   left: 0;
+  // }
   .close {
     position: absolute;
     top: 0px;
