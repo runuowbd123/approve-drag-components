@@ -7,6 +7,9 @@ const menuList = [
     key: "/process",
     title: '流程设计',
   },
-
+  {
+    key: "/websocket",
+    title: 'websocket',
+  },
 ];
 export default menuList;

@@ -48,6 +48,14 @@ export default [{
         isBack: false,
         breadTitle: "",
       },
+    },{
+      path: "websocket",
+      name: "websocket",
+      component: () => import("@/views/websocket/index.vue"),
+      meta: {
+        isBack: false,
+        breadTitle: "",
+      },
     }, ],
   },
 ];
