@@ -10,6 +10,9 @@ const menuList = [
   {
     key: "/websocket",
     title: 'websocket',
+  },{
+    key: "/websockettest1",
+    title: 'websockettest1',
   },
 ];
 export default menuList;

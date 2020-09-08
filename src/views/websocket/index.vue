@@ -9,7 +9,7 @@
 export default {
   data() {
     return {
-      path: "wss://echo.websocket.org",
+      path: "wss://echo.websocket.org", //wss://api.baidu.com
       socket: "",
       connected: false,
       timeout: 5000,
