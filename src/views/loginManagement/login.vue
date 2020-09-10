@@ -77,32 +77,31 @@ export default {
     },
     handleSubmit(e) {
       e.preventDefault();
-      this.$router.push("/process");
-      // e.preventDefault();
-      // this.form.validateFields((err, values) => {
-      //   if (!err) {
-      //     let reqData = {
-      //       account: values.account,
-      //       password: values.password
-      //     };
-      //     this.isNeedCode && (reqData.verifyCode = values.verifyCode);
-      //     this.api
-      //       .login01(reqData)
-      //       .then(res => {
-      //         this.$router.push("/home");
-      //       })
-      //       .catch(res => {
-      //         if (
-      //           res.data.code == "00060" &&
-      //           res.data.data &&
-      //           res.data.data.isNeedVerifyCode
-      //         ) {
-      //           this.isNeedCode = true;
-      //           this.getCodeImgUrl();
-      //         }
-      //       });
-      //   }
-      // });
+      // this.$router.push("/process");
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          let reqData = {
+            account: values.account,
+            password: values.password
+          };
+          this.isNeedCode && (reqData.verifyCode = values.verifyCode);
+          this.api
+            .login01(reqData)
+            .then(res => {
+              this.$router.push("/home");
+            })
+            .catch(res => {
+              if (
+                res.data.code == "00060" &&
+                res.data.data &&
+                res.data.data.isNeedVerifyCode
+              ) {
+                this.isNeedCode = true;
+                this.getCodeImgUrl();
+              }
+            });
+        }
+      });
     }
   }
 };

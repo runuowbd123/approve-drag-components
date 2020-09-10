@@ -29,6 +29,7 @@ $axios_qfy.interceptors.request.use(
 
 //全局处理ajax Error
 $axios_qfy.interceptors.response.use(function(response) {
+  console.log(response)
   if (response.status == 200) {
     if (response.data.code == "00000") {
       return Promise.resolve(response.data);

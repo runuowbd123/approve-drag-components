@@ -14,7 +14,7 @@ module.exports = {
         proxy: {
             '.*': {
                 // target: "http://192.168.1.66:8080", //回头配置开发本地地址
-                target: "http://192.168.1.15:9985", //回头配置开发本地地址
+                target: "http://e052e429411a.ngrok.io", //回头配置开发本地地址
                 // target: "http://192.168.1.67:8099",
                 changeOrigin: true,
                 ws: false
