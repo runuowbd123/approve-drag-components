@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div>
+      <a-button @click="init">建立websocke</a-button>
+    </div>
     <a-button @click="send" :disabled="!connected">发消息</a-button>
     <a-button @click="close">关闭</a-button>
   </div>
@@ -19,8 +22,6 @@ export default {
     };
   },
   mounted() {
-    // 初始化
-    this.init();
   },
   beforeDestroy() {
     this.close();
@@ -38,7 +39,6 @@ export default {
         this.socket.onerror = this.error;
         // 监听socket消息
         this.socket.onmessage = this.getMessage;
-        console.log(this.socket);
         this.socket.onclose = e => {
           console.log(e); //监听关闭事件
           console.log("关闭");
@@ -106,7 +106,7 @@ export default {
       this.socket.send({ a: 1 });
     },
     close() {
-      this.socket.close(); //关闭websocket
+      this.socket && this.socket.close(); //关闭websocket
     }
   }
 };

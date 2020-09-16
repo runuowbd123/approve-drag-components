@@ -1,5 +1,6 @@
 let Socket = ''
 let setIntervalWesocketPush = null
+import moment from "moment"
 
 /**
  * 建立websocket连接
@@ -7,32 +8,42 @@ let setIntervalWesocketPush = null
  */
 export const createSocket = (url, func) => {
   Socket && Socket.close()
-  if (!Socket) {
-    console.log('websocket建立连接')
-    Socket = new WebSocket(url)
-    Socket.onopen = onopenWS
-    Socket.onmessage = onmessageWS
-    Socket.onerror = onerrorWS
-    Socket.onclose = oncloseWS
-    func && func() // 建立连接后有回调就回调
-  } else {
-    console.log('websocket已连接')
+  Socket = null;
+  try {
+    if (!Socket) {
+      console.log('websocket建立连接')
+      Socket = new WebSocket(url)
+      Socket.onopen = onopenWS.bind(this, func)
+      Socket.onmessage = onmessageWS
+      Socket.onerror = onerrorWS.bind(this, url, func)
+      Socket.onclose = oncloseWS
+    } else {
+      console.log('websocket已连接')
+    }
+  } catch (e) {
+    //进行重连;
+    console.log('websocket连接错误');
+    onerrorWS(url, func)
   }
+
 }
 
 /**打开WS之后发送心跳 */
-const onopenWS = () => {
-  sendPing()
+const onopenWS = (func, e) => {
+  console.log(func, e)
+  sendPing();
+  func && func() // 建立连接后有回调就回调
 }
 
 /**连接失败重连 */
-const onerrorWS = () => {
-  Socket.close()
+const onerrorWS = (url, func, e) => {
+  console.log(url, func, e)
+  Socket.close();
   clearInterval(setIntervalWesocketPush)
-  console.log('连接失败重连中')
+  console.log('连接失败重连中', Socket, url, func)
   if (Socket.readyState !== 3) {
     Socket = null
-    createSocket()
+    createSocket(url, func)
   }
 }
 
@@ -81,15 +92,23 @@ const oncloseWS = () => {
  * @param {number} time 心跳间隔毫秒 默认5000
  * @param {string} ping 心跳名称 默认字符串ping
  */
-export const sendPing = (time = 5000, ping = '心跳') => {
+export const sendPing = (time = 5000) => {
   clearInterval(setIntervalWesocketPush)
-  Socket.send(ping)
+  Socket.send(JSON.stringify({
+    type: "heart",
+    time: moment().format('YYYY-MM-DD HH:mm:ss')
+  }))
   setIntervalWesocketPush = setInterval(() => {
-    Socket.send(ping)
+    Socket.send(JSON.stringify({
+      type: "heart",
+      time: moment().format('YYYY-MM-DD HH:mm:ss')
+    }))
   }, time)
 }
 
 // 关闭websocket
 export const closeWS = () => {
-  Socket.close()
+  Socket && Socket.close();
+  Socket = null;
+  console.log('关闭websocket')
 }

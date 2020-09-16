@@ -8,7 +8,7 @@ module.exports = {
     publicPath: "/",
     devServer: {
         host: "0.0.0.0",
-        port: "9201", //代理端口
+        port: "9202", //代理端口
         open: false, //项目启动时是否自动打开浏览器，我这里设置为false,不打开，true表示打开
         disableHostCheck: true, //穿透 如果不配置，穿透不了
         proxy: {
