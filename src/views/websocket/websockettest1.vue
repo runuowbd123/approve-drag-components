@@ -25,11 +25,16 @@
       <a-button @click="send" :disabled="!connected">发消息</a-button>
       <a-button @click="close">关闭</a-button>
     </div>
+    <div>
+      <a-button @click="startRecord">录音</a-button>
+      <a-button @click="stopRecording">停止录音</a-button>
+      <audio id="audio" :src="audioUrl"></audio>
+    </div>
   </div>
 </template>
 
 <script>
-import { createSocket, sendWSPush, closeWS } from "./function";
+import { createSocket, sendWSPush, closeWS } from "./websocketFunction";
 import moment from "moment";
 export default {
   name: "",
@@ -37,7 +42,12 @@ export default {
     return {
       connected: false,
       chatList: [],
-      input: ''
+      input: "",
+      recorder: null, // 录音
+      recordingTime: 0, // 录音时间
+      audioInterval: null, // 录制音频定时器
+      audioTime: 0, //s音频时间
+      audioUrl: '',
     };
   },
   created() {
@@ -77,7 +87,7 @@ export default {
           value: this.input,
           time: moment().format("YYYY-MM-DD HH:mm:ss")
         });
-        this.input = '';
+        this.input = "";
       }
     },
     close() {
@@ -86,6 +96,7 @@ export default {
       window.removeEventListener("onmessageWS", this.getData);
     },
     pressEnter() {
+      // 发消息
       console.log(this.input);
       if (this.input) {
         sendWSPush({
@@ -94,18 +105,24 @@ export default {
           value: this.input,
           time: moment().format("YYYY-MM-DD HH:mm:ss")
         });
-        this.input = '';
+        this.input = "";
       }
+    },
+    startRecord() {
+      // 开始录音
+    },
+    stopRecording() {
+      // 停止录音
     }
   },
   watch: {
     chatList: {
       handler(old, now) {
-        console.log(old, now)
+        console.log(old, now);
         setTimeout(() => {
           const div = document.getElementById("chatList");
-        div.scrollTop = div.scrollHeight;
-        }, 100)
+          div.scrollTop = div.scrollHeight;
+        }, 100);
       },
       deep: true
     }
