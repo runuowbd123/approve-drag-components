@@ -312,7 +312,7 @@ export default {
     }
   }
   .add-button {
-    background: #f5f5f7;
+    // background: #f5f5f7;
     padding: 20px;
     padding-bottom: 60px;
     position: relative;

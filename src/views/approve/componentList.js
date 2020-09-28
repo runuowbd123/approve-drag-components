@@ -26,36 +26,36 @@ const components= {
   //     content: ""
   //   }
   // ],
-  number: [
-    {
-      category: 'number',
-      type: "number",
-      name: "数字输入框",
-      id: 'c4',
-      label: "数字输入框",
-      placeholder: "请输入数字",
-      unit: '个',
-      required: false
-    },
-    {
-      category: 'number',
-      type: "money",
-      name: "金额",
-      id: 'c5',
-      label: "金额",
-      placeholder: "请输入金额",
-      required: false
-    },
-    {
-      category: 'number',
-      type: "formula",
-      name: "计算公式",
-      id: 'c6',
-      label: "计算公式",
-      formulaList: [],
-      required: false
-    }
-  ],
+  // number: [
+  //   {
+  //     category: 'number',
+  //     type: "number",
+  //     name: "数字输入框",
+  //     id: 'c4',
+  //     label: "数字输入框",
+  //     placeholder: "请输入数字",
+  //     unit: '个',
+  //     required: false
+  //   },
+  //   {
+  //     category: 'number',
+  //     type: "money",
+  //     name: "金额",
+  //     id: 'c5',
+  //     label: "金额",
+  //     placeholder: "请输入金额",
+  //     required: false
+  //   },
+  //   {
+  //     category: 'number',
+  //     type: "formula",
+  //     name: "计算公式",
+  //     id: 'c6',
+  //     label: "计算公式",
+  //     formulaList: [],
+  //     required: false
+  //   }
+  // ],
   // option: [
   //   {
   //     category: "option",
@@ -160,31 +160,36 @@ const components= {
   //   },
   // ],
   attendance: [
+    // {
+    //   category: 'attendance',
+    //   type: 'leave',
+    //   name: '请假/调休套件',
+    //   id: 'c17',
+    //   required: false,
+    // },
+    // {
+    //   category: 'attendance',
+    //   type: 'replacement',
+    //   name: '补卡套件',
+    //   id: 'c18',
+    // },
+    // {
+    //   category: 'attendance',
+    //   type: 'workOvertime',
+    //   name: '加班套件',
+    //   id: 'c19',
+    // },
+    // {
+    //   category: 'attendance',
+    //   type: 'goOut',
+    //   id: 'c20',
+    //   typeList: [{name: '选项一'}],
+    //   timeUnit: 'hour'
+    // }
     {
       category: 'attendance',
-      type: 'leave',
-      name: '请假/调休套件',
-      id: 'c17',
-      required: false,
-    },
-    {
-      category: 'attendance',
-      type: 'replacement',
-      name: '补卡套件',
-      id: 'c18',
-    },
-    {
-      category: 'attendance',
-      type: 'workOvertime',
-      name: '加班套件',
-      id: 'c19',
-    },
-    {
-      category: 'attendance',
-      type: 'goOut',
-      id: 'c20',
-      typeList: [{name: '选项一'}],
-      timeUnit: 'hour'
+      type: 'businessTravel',
+      id: 'c21',
     }
   ]
 };
@@ -209,6 +214,7 @@ const componentsName = {
   leave: '请假/调休套件',
   replacement: '补卡套件',
   workOvertime: '加班套件',
-  goOut: '外出套件'
+  goOut: '外出套件',
+  businessTravel: '出差套件'
 }
 export default {components,componentsName}

@@ -925,10 +925,10 @@ export default {
   width: 340px;
   flex: none;
   .mobile-wrap {
-    padding: 20px 20px;
-    background: #fff;
-    border-radius: 30px;
-    box-shadow: 0px 0px 10px #ccc;
+    // padding: 20px 20px;
+    // background: #fff;
+    // border-radius: 30px;
+    // box-shadow: 0px 0px 10px #ccc;
   }
   .list-group-item1 {
     position: relative;
