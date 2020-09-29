@@ -52,3 +52,15 @@ export function _debounce (fn, delay) {
     }, delay)
   }
 }
+
+// 下载文件
+export function fileDownload(downloadUrl) {
+  let aLink = document.createElement("a");
+  aLink.style.display = "none";
+  aLink.href = downloadUrl;
+  aLink.download = "下载图片.png";
+  // 触发点击-然后移除
+  document.body.appendChild(aLink);
+  aLink.click();
+  document.body.removeChild(aLink);
+}
