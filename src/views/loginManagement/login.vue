@@ -77,7 +77,7 @@ export default {
     },
     handleSubmit(e) {
       e.preventDefault();
-      this.$router.push("/process");
+      this.$router.push("/formdesign");
       // this.form.validateFields((err, values) => {
       //   if (!err) {
       //     let reqData = {

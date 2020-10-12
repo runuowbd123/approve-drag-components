@@ -1,6 +1,6 @@
 export default [{
     path: '/',
-    redirect: '/login'
+    redirect: '/formdesign'
   }, {
     path: "/login",
     name: "login",

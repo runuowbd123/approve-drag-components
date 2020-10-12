@@ -8,9 +8,9 @@ const menuList = [
     title: '流程设计',
   },
   {
-    key: "/websocket",
-    title: 'websocket',
-  },{
+  //   key: "/websocket",
+  //   title: 'websocket',
+  // },{
     key: "/websockettest1",
     title: 'websockettest1',
   },
