@@ -5,7 +5,7 @@ function resolve(dir) {
     return path.join(__dirname, dir);
 }
 module.exports = {
-    publicPath: "/",
+    publicPath: "./",
     devServer: {
         host: "0.0.0.0",
         port: "9202", //代理端口

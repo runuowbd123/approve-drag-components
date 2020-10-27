@@ -167,30 +167,31 @@ const components= {
       id: 'c17',
       required: false,
     },
-    // {
-    //   category: 'attendance',
-    //   type: 'replacement',
-    //   name: '补卡套件',
-    //   id: 'c18',
-    // },
-    // {
-    //   category: 'attendance',
-    //   type: 'workOvertime',
-    //   name: '加班套件',
-    //   id: 'c19',
-    // },
-    // {
-    //   category: 'attendance',
-    //   type: 'goOut',
-    //   id: 'c20',
-    //   typeList: [{name: '选项一'}],
-    //   timeUnit: 'hour'
-    // },
+    {
+      category: 'attendance',
+      type: 'replacement',
+      name: '补卡套件',
+      id: 'c18',
+    },
+    {
+      category: 'attendance',
+      type: 'workOvertime',
+      name: '加班套件',
+      id: 'c19',
+    },
+    {
+      category: 'attendance',
+      type: 'goOut',
+      id: 'c20',
+      typeList: [{name: '选项一'}],
+      timeUnit: 'hour'
+    },
     {
       category: 'attendance',
       type: 'businessTravel',
       name: '出差套件',
       id: 'c21',
+      unit: 'hour',
     }
   ]
 };
