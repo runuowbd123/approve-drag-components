@@ -9,15 +9,19 @@
   >
     <div slot="title">
       <a-form-model :model="editData" :label-col="labelCol" :wrapper-col="wrapperCol" ref="form">
-        <div style="display: flex;justify-content: space-between">
+        <div style="display: flex;justify-content: space-between;align-items:center">
+          <div v-if="editData.type==='originator'">
+            {{editData.title}}
+          </div>
           <a-form-model-item
             prop="title"
             :rules="{ required: true, message: '请输入' }"
             style="margin-bottom:0"
+            v-else
           >
             <a-input v-model="editData.title" style="width: 300px" />
           </a-form-model-item>
-          <a-form-model-item prop="sort" style="margin-bottom:0" v-if="editData.sort > -1">
+          <a-form-model-item prop="sort" style="margin-bottom:0" v-if="editData.type === 'condition'">
             <a-select v-model="editData.sort" style="width: 90px">
               <a-select-option
                 :value="index"
@@ -29,11 +33,12 @@
         </div>
       </a-form-model>
     </div>
-    <a-form-model :model="editData" :label-col="labelCol" :wrapper-col="wrapperCol" ref="form">
-      <!-- <a-form-model-item prop="title" :rules="{ required: true, message: '请输入' }">
-        <a-input v-model="editData.title" style="width: 370px" />
-      </a-form-model-item>-->
-    </a-form-model>
+    <div v-if="editData.type === 'condition'">
+      条件内容
+    </div>
+    <div v-else>
+      节点内容
+    </div>
     <div style="display: flex;flex-direction: row-reverse">
       <a-button type="primary" @click="save">保存</a-button>
       <a-button @click="close" style="margin-right: 20px">取消</a-button>

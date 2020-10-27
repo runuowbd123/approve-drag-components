@@ -11,14 +11,16 @@
             :list="components.text"
             :group="{ name: 'comp', pull: 'clone', put: false }"
             @change="dragChange"
-            :options="{sort: false}"
+            :options="{ sort: false }"
             filter=".undraggable"
           >
             <div
               class="list-group-item"
               v-for="item in components.text"
               :key="item.id"
-            >{{ getcomponentName(item) }}</div>
+            >
+              {{ getcomponentName(item) }}
+            </div>
           </draggable>
           <!-- 数值组件 -->
           <div class="title">数值</div>
@@ -27,14 +29,16 @@
             :list="components.number"
             :group="{ name: 'comp', pull: 'clone', put: false }"
             @change="dragChange"
-            :options="{sort: false}"
+            :options="{ sort: false }"
             filter=".undraggable"
           >
             <div
               class="list-group-item"
               v-for="item in components.number"
               :key="item.id"
-            >{{ getcomponentName(item) }}</div>
+            >
+              {{ getcomponentName(item) }}
+            </div>
           </draggable>
           <!-- 选项 -->
           <div class="title">选项</div>
@@ -43,14 +47,16 @@
             :list="components.option"
             :group="{ name: 'comp', pull: 'clone', put: false }"
             @change="dragChange"
-            :options="{sort: false}"
+            :options="{ sort: false }"
             filter=".undraggable"
           >
             <div
               class="list-group-item"
               v-for="item in components.option"
               :key="item.id"
-            >{{ getcomponentName(item) }}</div>
+            >
+              {{ getcomponentName(item) }}
+            </div>
           </draggable>
           <!-- 日期 -->
           <div class="title">日期</div>
@@ -59,14 +65,16 @@
             :list="components.date"
             :group="{ name: 'comp', pull: 'clone', put: false }"
             @change="dragChange"
-            :options="{sort: false}"
+            :options="{ sort: false }"
             filter=".undraggable"
           >
             <div
               class="list-group-item"
               v-for="item in components.date"
               :key="item.id"
-            >{{ getcomponentName(item) }}</div>
+            >
+              {{ getcomponentName(item) }}
+            </div>
           </draggable>
           <!-- 其他 -->
           <div class="title">其他</div>
@@ -75,14 +83,16 @@
             :list="components.other"
             :group="{ name: 'comp', pull: 'clone', put: false }"
             @change="dragChange"
-            :options="{sort: false}"
+            :options="{ sort: false }"
             filter=".undraggable"
           >
             <div
               class="list-group-item"
               v-for="item in components.other"
               :key="item.id"
-            >{{ getcomponentName(item) }}</div>
+            >
+              {{ getcomponentName(item) }}
+            </div>
           </draggable>
         </a-tab-pane>
         <a-tab-pane key="2" tab="控件组">
@@ -93,14 +103,16 @@
             :list="components.attendance"
             :group="{ name: 'comp', pull: 'clone', put: false }"
             @change="dragChange"
-            :options="{sort: false}"
+            :options="{ sort: false }"
             filter=".undraggable"
           >
             <div
               class="list-group-item"
               v-for="item in components.attendance"
               :key="item.id"
-            >{{ getcomponentName(item) }}</div>
+            >
+              {{ getcomponentName(item) }}
+            </div>
           </draggable>
         </a-tab-pane>
       </a-tabs>
@@ -113,18 +125,24 @@
           :list="componentList"
           group="comp"
           @change="dragChange"
-          style="height: 545px;overflow: auto;background: #f3f3f3;border-radius:20px;padding: 10px 0;"
-          :options="{animation: 300}"
+          style="
+            height: 545px;
+            overflow: auto;
+            background: #f3f3f3;
+            border-radius: 20px;
+            padding: 10px 0;
+          "
+          :options="{ animation: 300 }"
         >
           <div
-            v-for="(item,index) in componentList"
+            v-for="(item, index) in componentList"
             :key="index"
             class="list-group-item1"
-            :class="item.id === clickItemId ? 'list-group-item-active': ''"
+            :class="item.id === clickItemId ? 'list-group-item-active' : ''"
             @click="clickComponent(item)"
           >
             <!-- 单行输入框 -->
-            <template v-if="item.type==='input'">
+            <template v-if="item.type === 'input'">
               <van-field
                 :label="item.label"
                 :placeholder="item.placeholder"
@@ -132,7 +150,7 @@
               />
             </template>
             <!-- 多行输入框 -->
-            <template v-if="item.type==='textArea'">
+            <template v-if="item.type === 'textArea'">
               <van-field
                 type="textarea"
                 :label="item.label"
@@ -141,25 +159,38 @@
               />
             </template>
             <!-- 说明文字 -->
-            <template v-if="item.type==='explain'">
-              <van-field type="textarea" placeholder="请输入说明文字" :value="item.content" />
+            <template v-if="item.type === 'explain'">
+              <van-field
+                type="textarea"
+                placeholder="请输入说明文字"
+                :value="item.content"
+              />
             </template>
             <!-- 数字输入框 -->
-            <template v-if="item.type==='number'">
+            <template v-if="item.type === 'number'">
               <van-field
                 type="number"
                 :label="item.label"
                 :placeholder="item.placeholder"
                 :required="item.required"
               />
-              <div style="width: 100%;padding: 0 16px">
+              <div style="width: 100%; padding: 0 16px">
                 <div
-                  style="font-size: 12px;color: #ccc;width: 6.2em;display: flex;justify-content: center;word-break:break-all"
-                >({{item.unit}})</div>
+                  style="
+                    font-size: 12px;
+                    color: #ccc;
+                    width: 6.2em;
+                    display: flex;
+                    justify-content: center;
+                    word-break: break-all;
+                  "
+                >
+                  ({{ item.unit }})
+                </div>
               </div>
             </template>
             <!-- 金额 -->
-            <template v-if="item.type==='money'">
+            <template v-if="item.type === 'money'">
               <van-field
                 type="number"
                 :label="item.label"
@@ -168,67 +199,114 @@
               />
             </template>
             <!-- 计算公式 -->
-            <template v-if="item.type==='formula'">
-              <van-field :label="item.label" :value="'自动计算'" :required="item.required" />
+            <template v-if="item.type === 'formula'">
+              <van-field
+                :label="item.label"
+                :value="'自动计算'"
+                :required="item.required"
+              />
             </template>
             <!-- 单选框 或者 多选框 或者 日期 或者 联系人 或者部门-->
             <template
-              v-if="item.type==='radio' || item.type === 'checkbox' || item.type === 'datepicker' || item.type === 'contact' || item.type === 'department'"
+              v-if="
+                item.type === 'radio' ||
+                item.type === 'checkbox' ||
+                item.type === 'datepicker' ||
+                item.type === 'contact' ||
+                item.type === 'department'
+              "
             >
               <div
-                style="padding: 15px 20px;background: #fff;display: flex;justify-content: space-between"
+                style="
+                  padding: 15px 20px;
+                  background: #fff;
+                  display: flex;
+                  justify-content: space-between;
+                "
               >
-                <div style="color: #000;width: 6.2em;word-break:break-all;position:relative">
-                  {{item.label}}
+                <div
+                  style="
+                    color: #000;
+                    width: 6.2em;
+                    word-break: break-all;
+                    position: relative;
+                  "
+                >
+                  {{ item.label }}
                   <div
-                    style="position:absolute;top: 0;left: -10px;color: red"
+                    style="position: absolute; top: 0; left: -10px; color: red"
                     v-if="item.required"
-                  >*</div>
+                  >
+                    *
+                  </div>
                 </div>
-                <div style="display: flex;align-items: center">
+                <div style="display: flex; align-items: center">
                   <div
-                    style="color: rgb(153, 153, 153);max-width: 150px;word-break:break-all"
-                  >{{item.placeholder}}</div>
+                    style="
+                      color: rgb(153, 153, 153);
+                      max-width: 150px;
+                      word-break: break-all;
+                    "
+                  >
+                    {{ item.placeholder }}
+                  </div>
                   <van-icon name="arrow" style="margin-left: 5px" />
                 </div>
               </div>
             </template>
             <!-- 日期区间 -->
-            <template v-if="item.type==='datepickerRange'">
+            <template v-if="item.type === 'datepickerRange'">
               <div class="date-range">
                 <div class="date-range-title">
-                  {{item.label1}}
+                  {{ item.label1 }}
                   <div class="red" v-if="item.required">*</div>
                 </div>
                 <div class="date-range-content">
-                  <div class="date-range-content-word">{{item.placeholder}}</div>
+                  <div class="date-range-content-word">
+                    {{ item.placeholder }}
+                  </div>
                   <van-icon name="arrow" style="margin-left: 5px" />
                 </div>
               </div>
               <div class="date-range">
                 <div class="date-range-title">
-                  {{item.label2}}
+                  {{ item.label2 }}
                   <div class="red" v-if="item.required">*</div>
                 </div>
                 <div class="date-range-content">
-                  <div class="date-range-content-word">{{item.placeholder}}</div>
+                  <div class="date-range-content-word">
+                    {{ item.placeholder }}
+                  </div>
                   <van-icon name="arrow" style="margin-left: 5px" />
                 </div>
               </div>
               <div class="date-range" v-if="item.autoCalculate">
-                <div class="date-range-title">{{item.timeLabel}}</div>
+                <div class="date-range-title">{{ item.timeLabel }}</div>
                 <div class="date-range-content">
                   <div class="date-range-content-word">自动计算</div>
-                  <van-icon name="arrow" style="margin-left: 5px" v-show="false" />
+                  <van-icon
+                    name="arrow"
+                    style="margin-left: 5px"
+                    v-show="false"
+                  />
                 </div>
               </div>
             </template>
             <!-- 明细/表格 -->
-            <template v-if="item.type==='detail'">
-              <div style="padding: 10px;background: #fff;">
+            <template v-if="item.type === 'detail'">
+              <div style="padding: 10px; background: #fff">
                 <div style="margin-bottom: 5px">明细</div>
                 <div
-                  style="cursor: pointer;background: rgb(242,242,242);text-align: center;display: flex; flex-direction: column;justify-content: space-around;height:130px;padding: 20px 0;"
+                  style="
+                    cursor: pointer;
+                    background: rgb(242, 242, 242);
+                    text-align: center;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+                    height: 130px;
+                    padding: 20px 0;
+                  "
                 >
                   <div>可拖入多个控件（不包含明细控件）</div>
                   <div style="color: blue">+ 添加</div>
@@ -236,10 +314,10 @@
               </div>
             </template>
             <!-- 省市区 -->
-            <template v-if="item.type==='address'">
+            <template v-if="item.type === 'address'">
               <div class="date-range">
                 <div class="date-range-title">
-                  {{item.label}}
+                  {{ item.label }}
                   <div class="red" v-if="item.required">*</div>
                 </div>
                 <div class="date-range-content">
@@ -247,23 +325,35 @@
                   <van-icon name="arrow" style="margin-left: 5px" />
                 </div>
               </div>
-              <van-field type="textarea" placeholder="请输入详细地址" v-if="item.format === 'ssq-detail'" />
+              <van-field
+                type="textarea"
+                placeholder="请输入详细地址"
+                v-if="item.format === 'ssq-detail'"
+              />
             </template>
             <!-- 图片, 附件 -->
-            <template v-if="item.type==='picture' || item.type === 'annex'">
+            <template v-if="item.type === 'picture' || item.type === 'annex'">
               <div class="date-range">
                 <div class="date-range-title">
-                  {{item.label}}
+                  {{ item.label }}
                   <div class="red" v-if="item.required">*</div>
                 </div>
                 <div class="date-range-content">
-                  <van-icon name="photo" style="font-size: 20px" v-if="item.type==='picture'" />
-                  <a-icon type="folder-add" style="font-size: 18px" v-if="item.type==='annex'" />
+                  <van-icon
+                    name="photo"
+                    style="font-size: 20px"
+                    v-if="item.type === 'picture'"
+                  />
+                  <a-icon
+                    type="folder-add"
+                    style="font-size: 18px"
+                    v-if="item.type === 'annex'"
+                  />
                 </div>
               </div>
             </template>
             <!-- 请假/调休套件 -->
-            <template v-if="item.type==='leave'">
+            <template v-if="item.type === 'leave'">
               <div class="date-range">
                 <div class="date-range-title">
                   请假类型
@@ -275,7 +365,13 @@
                 </div>
               </div>
               <!-- 这个是灰色的小间距 -->
-              <div style="background: rgb(243, 243, 243);height: 10px;width: 100%" />
+              <div
+                style="
+                  background: rgb(243, 243, 243);
+                  height: 10px;
+                  width: 100%;
+                "
+              />
               <div class="date-range">
                 <div class="date-range-title">
                   开始日期
@@ -303,18 +399,27 @@
                 </div>
                 <div class="date-range-content">
                   <div class="date-range-content-word">自动计算</div>
-                  <van-icon name="arrow" style="margin-left: 5px;visibility: hidden;" />
+                  <van-icon
+                    name="arrow"
+                    style="margin-left: 5px; visibility: hidden"
+                  />
                 </div>
               </div>
               <!-- 这个是灰色的小间距 -->
-              <div style="background: rgb(243, 243, 243);height: 10px;width: 100%" />
+              <div
+                style="
+                  background: rgb(243, 243, 243);
+                  height: 10px;
+                  width: 100%;
+                "
+              />
               <div class="date-range">
                 <div class="date-range-title">
                   请假事由
                   <div class="red" v-if="item.required">*</div>
                 </div>
               </div>
-              <div style="color: #999;padding-left: 10px">请输入请假事由</div>
+              <div style="color: #999; padding-left: 10px">请输入请假事由</div>
             </template>
             <!-- 补卡套件 -->
             <template v-if="item.type === 'replacement'">
@@ -330,7 +435,7 @@
               </div>
             </template>
             <!-- 加班套件 -->
-            <template v-if="item.type==='workOvertime'">
+            <template v-if="item.type === 'workOvertime'">
               <div class="date-range">
                 <div class="date-range-title">
                   开始日期
@@ -358,12 +463,15 @@
                 </div>
                 <div class="date-range-content">
                   <div class="date-range-content-word">自动计算</div>
-                  <van-icon name="arrow" style="margin-left: 5px;visibility: hidden;" />
+                  <van-icon
+                    name="arrow"
+                    style="margin-left: 5px; visibility: hidden"
+                  />
                 </div>
               </div>
             </template>
             <!-- 外出套件 -->
-            <template v-if="item.type==='goOut'">
+            <template v-if="item.type === 'goOut'">
               <div class="date-range">
                 <div class="date-range-title">
                   外出类型
@@ -375,7 +483,13 @@
                 </div>
               </div>
               <!-- 这个是灰色的小间距 -->
-              <div style="background: rgb(243, 243, 243);height: 10px;width: 100%" />
+              <div
+                style="
+                  background: rgb(243, 243, 243);
+                  height: 10px;
+                  width: 100%;
+                "
+              />
               <div class="date-range">
                 <div class="date-range-title">
                   开始日期
@@ -403,8 +517,147 @@
                 </div>
                 <div class="date-range-content">
                   <div class="date-range-content-word">自动计算</div>
-                  <van-icon name="arrow" style="margin-left: 5px;visibility: hidden;" />
+                  <van-icon
+                    name="arrow"
+                    style="margin-left: 5px; visibility: hidden"
+                  />
                 </div>
+              </div>
+            </template>
+            <!-- 出差套件 -->
+            <template v-if="item.type === 'businessTravel'">
+              <div class="date-range">
+                <div class="date-range-title">
+                  出差事由
+                  <div class="red">*</div>
+                </div>
+              </div>
+              <div
+                style="color: #999; padding-left: 10px; padding-bottom: 10px"
+              >
+                请输入出差事由
+              </div>
+              <!-- 这个是灰色的小间距 -->
+              <div
+                style="
+                  background: rgb(243, 243, 243);
+                  margin: 0 -10px;
+                  padding: 10px 20px;
+                "
+              >
+                日程
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  交通工具
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  单程/往返
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  出发城市
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  到达城市
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  开始日期
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择日期</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  结束日期
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择日期</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  时长（天）
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">自动计算</div>
+                  <van-icon
+                    name="arrow"
+                    style="margin-left: 5px; visibility: hidden"
+                  />
+                </div>
+              </div>
+              <div
+                style="
+                  background: rgb(243, 243, 243);
+                  margin: 0 -10px;
+                  padding: 10px 20px;
+                  text-align: center;
+                  color: #1890ff;
+                "
+              >
+                + 添加日程
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">同行人</div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">请选择</div>
+                  <van-icon name="arrow" style="margin-left: 5px" />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">
+                  出差天数
+                  <div class="red">*</div>
+                </div>
+                <div class="date-range-content">
+                  <div class="date-range-content-word">自动获取</div>
+                  <van-icon
+                    name="arrow"
+                    style="margin-left: 5px; visibility: hidden"
+                  />
+                </div>
+              </div>
+              <div class="date-range">
+                <div class="date-range-title">出差备注</div>
+              </div>
+              <div
+                style="color: #999; padding-left: 10px; padding-bottom: 10px"
+              >
+                请输入出差备注
               </div>
             </template>
 
@@ -421,10 +674,20 @@
 
     <!-- 右侧组件详情部分 -->
     <div class="component-detail">
-      <div class="title">{{getcomponentName(clickItem)}}</div>
+      <div class="title">{{ getcomponentName(clickItem) }}</div>
       <!-- 单行输入框,多行输入框,数字输入框,金额, 单选框，多选框, 日期, 联系人, 部门 -->
       <div
-        v-if="clickItem.type === 'input' || clickItem.type === 'textArea' || clickItem.type === 'number' || clickItem.type === 'money' || clickItem.type === 'radio' || clickItem.type === 'checkbox' || clickItem.type === 'datepicker' || clickItem.type === 'contact' || clickItem.type === 'department'"
+        v-if="
+          clickItem.type === 'input' ||
+          clickItem.type === 'textArea' ||
+          clickItem.type === 'number' ||
+          clickItem.type === 'money' ||
+          clickItem.type === 'radio' ||
+          clickItem.type === 'checkbox' ||
+          clickItem.type === 'datepicker' ||
+          clickItem.type === 'contact' ||
+          clickItem.type === 'department'
+        "
         class="component-detail-item"
       >
         <div class="component-detail-item-title">
@@ -464,33 +727,47 @@
           </div>
         </template>
         <!-- 单选框和多选框多个选项配置 -->
-        <template v-if="clickItem.type === 'radio' || clickItem.type === 'checkbox'">
+        <template
+          v-if="clickItem.type === 'radio' || clickItem.type === 'checkbox'"
+        >
           <div class="component-detail-item-title">
             选项
             <span class="gray">每项最多20个字，最多20项</span>
           </div>
           <div class="component-detail-item-content">
-            <draggable class="list-group" :list="clickItem.optionList" :group="{ name: 'comp'}">
+            <draggable
+              class="list-group"
+              :list="clickItem.optionList"
+              :group="{ name: 'comp' }"
+            >
               <div
-                v-for="(item,index) in clickItem.optionList"
+                v-for="(item, index) in clickItem.optionList"
                 :key="index"
-                style="display: flex;align-items:center;cursor: move;margin-top: 10px"
+                style="
+                  display: flex;
+                  align-items: center;
+                  cursor: move;
+                  margin-top: 10px;
+                "
               >
                 <a-icon type="menu" style="margin-right: 5px" />
                 <a-input
                   v-model="item.name"
-                  style="width: 200px;margin-right: 10px;"
+                  style="width: 200px; margin-right: 10px"
                   :maxLength="20"
                 />
                 <a-icon
                   type="plus-circle"
                   style="margin-right: 5px;color: rgb(51,153,51);font-size: 16px';cursor: pointer"
-                  v-if="clickItem.optionList.length - 1 === index && clickItem.optionList.length < 20"
+                  v-if="
+                    clickItem.optionList.length - 1 === index &&
+                    clickItem.optionList.length < 20
+                  "
                   @click="plusOption(clickItem.optionList)"
                 />
                 <a-icon
                   type="minus-circle"
-                  style="color: red;font-size: 14px;cursor: pointer"
+                  style="color: red; font-size: 14px; cursor: pointer"
                   v-if="clickItem.optionList.length !== 1"
                   @click="deleteOption(clickItem.optionList, index)"
                 />
@@ -502,7 +779,10 @@
         <template v-if="clickItem.type === 'datepicker'">
           <div class="component-detail-item-title">日期类型</div>
           <div class="component-detail-item-content">
-            <a-radio-group v-model="clickItem.format" style="display: flex;flex-direction: column">
+            <a-radio-group
+              v-model="clickItem.format"
+              style="display: flex; flex-direction: column"
+            >
               <a-radio value="YYYY-MM-DD">年-月-日</a-radio>
               <a-radio value="YYYY-MM-DD HH:mm">年-月-日 时:分</a-radio>
             </a-radio-group>
@@ -520,11 +800,19 @@
         <template v-if="clickItem.type === 'department'">
           <div class="component-detail-item-title">选择范围</div>
           <div class="component-detail-item-content">
-            <a-checkbox v-model="clickItem.canChooseMore">可选多部门</a-checkbox>
+            <a-checkbox v-model="clickItem.canChooseMore"
+              >可选多部门</a-checkbox
+            >
           </div>
         </template>
-        <div class="component-detail-item-title">验证（勾选后可作为流程条件）</div>
-        <a-checkbox :checked="clickItem.required" @change="changeComponentE('required', $event)">必填</a-checkbox>
+        <div class="component-detail-item-title">
+          验证（勾选后可作为流程条件）
+        </div>
+        <a-checkbox
+          :checked="clickItem.required"
+          @change="changeComponentE('required', $event)"
+          >必填</a-checkbox
+        >
       </div>
 
       <!-- 说明文字 -->
@@ -538,7 +826,7 @@
             :value="clickItem.content"
             @change="changeComponentE('content', $event)"
             :maxLength="50"
-            :autoSize="{minRows: 6, maxRows: 6}"
+            :autoSize="{ minRows: 6, maxRows: 6 }"
           />
         </div>
       </div>
@@ -557,20 +845,34 @@
           />
         </div>
         <div class="component-detail-item-title">计算公式</div>
-        <div class="component-detail-item-content formula" @click="formulaModalShow=true">
+        <div
+          class="component-detail-item-content formula"
+          @click="formulaModalShow = true"
+        >
           <div class="formula-item">
             计算结果 =
-            <template v-for="(it,ind) in clickItem.formulaList">
-              <span :key="ind" :class="it.type ? 'formula-item-gray' : ''">{{it.label}}{{" "}}</span>
+            <template v-for="(it, ind) in clickItem.formulaList">
+              <span :key="ind" :class="it.type ? 'formula-item-gray' : ''"
+                >{{ it.label }}{{ " " }}</span
+              >
             </template>
           </div>
         </div>
-        <div class="component-detail-item-title">验证（勾选后可作为流程条件）</div>
-        <a-checkbox :checked="clickItem.required" @change="changeComponentE('required', $event)">必填</a-checkbox>
+        <div class="component-detail-item-title">
+          验证（勾选后可作为流程条件）
+        </div>
+        <a-checkbox
+          :checked="clickItem.required"
+          @change="changeComponentE('required', $event)"
+          >必填</a-checkbox
+        >
       </div>
 
       <!-- 日期区间 -->
-      <div v-if="clickItem.type === 'datepickerRange'" class="component-detail-item">
+      <div
+        v-if="clickItem.type === 'datepickerRange'"
+        class="component-detail-item"
+      >
         <div class="component-detail-item-title">
           标题1
           <span class="gray">最多20个字</span>
@@ -594,12 +896,17 @@
         </div>
         <div class="component-detail-item-title">日期类型</div>
         <div class="component-detail-item-content">
-          <a-radio-group v-model="clickItem.format" style="display: flex;flex-direction: column">
+          <a-radio-group
+            v-model="clickItem.format"
+            style="display: flex; flex-direction: column"
+          >
             <a-radio value="YYYY-MM-DD">年-月-日</a-radio>
             <a-radio value="YYYY-MM-DD HH:mm">年-月-日 时:分</a-radio>
           </a-radio-group>
         </div>
-        <div class="component-detail-item-title">验证（勾选后可作为流程条件）</div>
+        <div class="component-detail-item-title">
+          验证（勾选后可作为流程条件）
+        </div>
         <div class="component-detail-item-content">
           <a-checkbox v-model="clickItem.required">必填</a-checkbox>
         </div>
@@ -611,14 +918,22 @@
           标题
           <span class="gray">最多20个字</span>
         </div>
-        <div class="component-detail-item-content" v-if="clickItem.autoCalculate">
+        <div
+          class="component-detail-item-content"
+          v-if="clickItem.autoCalculate"
+        >
           <a-input v-model="clickItem.timeLabel" :maxLength="20" />
         </div>
       </div>
 
       <!-- 明细, 省市区, 图片, 附件 -->
       <div
-        v-if="clickItem.type === 'address' || clickItem.type === 'detail' || clickItem.type === 'picture' || clickItem.type === 'annex'"
+        v-if="
+          clickItem.type === 'address' ||
+          clickItem.type === 'detail' ||
+          clickItem.type === 'picture' ||
+          clickItem.type === 'annex'
+        "
         class="component-detail-item"
       >
         <div class="component-detail-item-title">
@@ -628,7 +943,9 @@
         <div class="component-detail-item-content">
           <a-input v-model="clickItem.label" :maxLength="20" />
         </div>
-        <div class="component-detail-item-title">验证（勾选后可作为流程条件）</div>
+        <div class="component-detail-item-title">
+          验证（勾选后可作为流程条件）
+        </div>
         <div class="component-detail-item-content">
           <a-checkbox v-model="clickItem.required">必填</a-checkbox>
         </div>
@@ -636,7 +953,10 @@
           <!-- 省市区格式配置 -->
           <div class="component-detail-item-title">格式</div>
           <div class="component-detail-item-content">
-            <a-radio-group v-model="clickItem.format" style="display: flex;flex-direction: column">
+            <a-radio-group
+              v-model="clickItem.format"
+              style="display: flex; flex-direction: column"
+            >
               <a-radio value="ssq">省市区</a-radio>
               <a-radio value="ssq-detail">省市区-详细地址</a-radio>
             </a-radio-group>
@@ -649,31 +969,43 @@
         <a-table
           :columns="leaveTypeColumn"
           :dataSource="leaveTypeData"
-          :rowKey="record => JSON.stringify(record)"
+          :rowKey="(record) => JSON.stringify(record)"
           :pagination="false"
           :showHeader="false"
           :bordered="true"
           class="leave-table"
         />
-        <div class="component-detail-item-title" style="margin-top: 20px">验证（勾选后可作为流程条件）</div>
+        <div class="component-detail-item-title" style="margin-top: 20px">
+          验证（勾选后可作为流程条件）
+        </div>
         <div class="component-detail-item-content">
           <a-checkbox v-model="clickItem.required">必填</a-checkbox>
         </div>
       </div>
       <!-- 补卡套件 -->
-      <div v-if="clickItem.type === 'replacement'" class="component-detail-item">
-        <div class="component-detail-item-title">补卡申请通过后，会更改员工考勤状态</div>
-        <div style="margin: 10px 0;color: #999">1. 修改缺卡记录为正常</div>
-        <div style="margin: 10px 0;color: #999">2. 加班忘打卡可以补加班卡</div>
-        <div style="margin: 10px 0;color: #999">3. 上班忘打卡，可以通过补卡更新为正常。</div>
+      <div
+        v-if="clickItem.type === 'replacement'"
+        class="component-detail-item"
+      >
+        <div class="component-detail-item-title">
+          补卡申请通过后，会更改员工考勤状态
+        </div>
+        <div style="margin: 10px 0; color: #999">1. 修改缺卡记录为正常</div>
+        <div style="margin: 10px 0; color: #999">2. 加班忘打卡可以补加班卡</div>
+        <div style="margin: 10px 0; color: #999">
+          3. 上班忘打卡，可以通过补卡更新为正常。
+        </div>
       </div>
       <!-- 加班套件 -->
-      <div v-if="clickItem.type === 'workOvertime'" class="component-detail-item">
+      <div
+        v-if="clickItem.type === 'workOvertime'"
+        class="component-detail-item"
+      >
         <div class="component-detail-item-title">加班时长单位：小时</div>
       </div>
       <!-- 外出套件 -->
       <div v-if="clickItem.type === 'goOut'" class="component-detail-item">
-        <div style="display: flex;align-items: center; margin: 10px 0 20px;">
+        <div style="display: flex; align-items: center; margin: 10px 0 20px">
           <div>选择时长单位：</div>
           <a-select v-model="clickItem.timeUnit" style="width: 150px">
             <a-select-option value="hour">按小时</a-select-option>
@@ -686,27 +1018,39 @@
           <span class="gray">每项最多20个字，最多20项</span>
         </div>
         <div class="component-detail-item-content">
-          <draggable class="list-group" :list="clickItem.typeList" :group="{ name: 'comp'}">
+          <draggable
+            class="list-group"
+            :list="clickItem.typeList"
+            :group="{ name: 'comp' }"
+          >
             <div
-              v-for="(item,index) in clickItem.typeList"
+              v-for="(item, index) in clickItem.typeList"
               :key="index"
-              style="display: flex;align-items:center;cursor: move;margin-top: 10px"
+              style="
+                display: flex;
+                align-items: center;
+                cursor: move;
+                margin-top: 10px;
+              "
             >
               <a-icon type="menu" style="margin-right: 5px" />
               <a-input
                 v-model="item.name"
-                style="width: 200px;margin-right: 10px;"
+                style="width: 200px; margin-right: 10px"
                 :maxLength="20"
               />
               <a-icon
                 type="plus-circle"
                 style="margin-right: 5px;color: rgb(51,153,51);font-size: 16px';cursor: pointer"
-                v-if="clickItem.typeList.length - 1 === index && clickItem.typeList.length < 20"
+                v-if="
+                  clickItem.typeList.length - 1 === index &&
+                  clickItem.typeList.length < 20
+                "
                 @click="plusOption(clickItem.typeList)"
               />
               <a-icon
                 type="minus-circle"
-                style="color: red;font-size: 14px;cursor: pointer"
+                style="color: red; font-size: 14px; cursor: pointer"
                 v-if="clickItem.typeList.length !== 1"
                 @click="deleteOption(clickItem.typeList, index)"
               />
@@ -714,20 +1058,59 @@
           </draggable>
         </div>
       </div>
+      <!-- 出差套件 -->
+      <div
+        v-if="clickItem.type === 'businessTravel'"
+        class="component-detail-item"
+      >
+        <div class="component-detail-item-title">
+          出差事由：最多可填写100个中文字
+        </div>
+        <div class="component-detail-item-title">
+          交通工具：员工可选择飞机、火车、汽车、其他
+        </div>
+        <div class="component-detail-item-title">
+          单程往返：员工可选择单程或往返
+        </div>
+        <div class="component-detail-item-title">
+          出发-目的城市：员工自行选择或填写
+        </div>
+        <div class="component-detail-item-title">
+          开始-结束时间：按天/按半天/按小时
+        </div>
+        <div class="component-detail-item-title">
+          选择时长单位：
+          <a-select v-model="clickItem.unit" style="width: 150px">
+            <a-select-option value="hour">按小时</a-select-option>
+            <a-select-option value="halfDay">按半天</a-select-option>
+            <a-select-option value="day">按天</a-select-option>
+          </a-select>
+        </div>
+        <div class="component-detail-item-title">
+          出差天数：差旅开始第一天至最后一天的总天数（自然日）
+        </div>
+        <div class="component-detail-item-title">
+          同行人：员工从企业通讯录中选择，可选多人
+        </div>
+        <div class="component-detail-item-title">
+          出差备注：最多可填写100个中文字
+        </div>
+      </div>
     </div>
 
-    <a-button
+    <!-- <a-button
       type="primary"
-      style="position: absolute; top: 10px;right: 200px;z-index: 99999"
+      style="position: absolute; top: 10px; right: 200px; z-index: 99999"
       @click="save"
-    >保存</a-button>
+      >保存</a-button
+    > -->
     <formulaModal
       v-if="formulaModalShow"
       :formulaModalShow="formulaModalShow"
       :toolList="toolList"
       :defaultFormulaList="clickItem.formulaList"
       @changeComponentFormula="changeComponentFormula"
-      @closeFormulaModal="formulaModalShow=false"
+      @closeFormulaModal="formulaModalShow = false"
     />
   </div>
 </template>
@@ -738,44 +1121,70 @@ import components from "./componentList";
 import formulaModal from "./components/formulaModal";
 
 export default {
+  props: {
+    defaultComponentList: {
+      type: Array,
+      default: () => [],
+      required: false,
+    },
+    process: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+      required: false,
+    },
+  },
   components: {
     draggable,
-    formulaModal
+    formulaModal,
+  },
+  watch: {
+    componentList: {
+      handler(val, oldVal) {
+        console.log("componentList改变啦！！！", val);
+        this.$emit("change", val);
+      },
+      deep: true,
+    },
   },
   data() {
     return {
-      activeTab: "2",
+      activeTab: "1",
       components: components.components, // 可选组件
       componentsName: components.componentsName, // 组件的对应名称
       componentList: [], // 中间手机端添加的组件
-      count: 1, // y用于拖拽新组建生成的id
+      count: "componentId", // y用于拖拽新组建生成的id
       clickItemId: null, // 选择的组件id
       formulaModalShow: false, // 计算公式弹窗
       leaveTypeColumn: [
         { title: "类型", dataIndex: "type", width: "50%" },
-        { title: "时间", dataIndex: "time", width: "50%" }
+        { title: "时间", dataIndex: "time", width: "50%" },
       ], // 请假套件右侧表格表头
       leaveTypeData: [
         { type: "事假", time: "按小时" },
         { type: "调休", time: "按小时" },
         { type: "年假", time: "按半天" },
-        { type: "病假", time: "按半天" }
-      ] //请假套件右侧表格内容
+        { type: "病假", time: "按半天" },
+      ], //请假套件右侧表格内容
     };
+  },
+  created() {
+    this.componentList = this.defaultComponentList;
   },
   computed: {
     clickItem() {
-      const targetObj = (this.componentList || []).find(item => {
+      const targetObj = (this.componentList || []).find((item) => {
         return item.id === this.clickItemId;
       });
       return targetObj || { name: "无" };
     },
     toolList() {
-      const toolList = this.componentList.filter(item => {
+      const toolList = this.componentList.filter((item) => {
         return item.type === "money" || item.type === "number";
       });
       return toolList || [];
-    }
+    },
   },
   methods: {
     // 获取组件名
@@ -790,7 +1199,7 @@ export default {
       if (evt.added) {
         this.count += 1;
         const item = evt.added.element;
-        const idx = this.componentList.findIndex(e => e.id === item.id);
+        const idx = this.componentList.findIndex((e) => e.id === item.id);
         let temp = JSON.parse(JSON.stringify(this.componentList));
         temp[idx].id = this.count;
         this.componentList = temp;
@@ -799,15 +1208,24 @@ export default {
     },
     // 删除组件
     deleteItem(index, item) {
-      console.log(item, this.componentList);
+      console.log(item, this.componentList, this.process);
+      console.log(
+        "判断当前组件能否删除，后面流程用到则不能删",
+        this.canDelete(item, this.process)
+      );
+      // if(this.canDelete(item, this.process)) {
+
+      // } else {
+      //   this.$message.error('该组件已被设为审批条件，不可删除')
+      // }
       this.componentList.splice(index, 1);
       this.clickItemId = null;
       // 当删除金额和数字输入框的时候要清空对应用到这两个组件的计算公式
       if (item.type === "money" || item.type === "number") {
-        this.componentList = this.componentList.map(component => {
+        this.componentList = this.componentList.map((component) => {
           if (component.type === "formula") {
             let flag = true;
-            component.formulaList.forEach(formula => {
+            component.formulaList.forEach((formula) => {
               if (formula.id === item.id) {
                 flag = false;
               }
@@ -817,7 +1235,7 @@ export default {
             } else {
               return {
                 ...component,
-                formulaList: []
+                formulaList: [],
               };
             }
           } else {
@@ -825,6 +1243,31 @@ export default {
           }
         });
       }
+    },
+    // 判断是否可以删除，后面流程中用到了则不能删除
+    canDelete(targetObj, process) {
+      // console.log('判断是否可以删除',targetObj, process);
+      let flag = true;
+      if (process && process.conditions) {
+        process.conditions.forEach((item) => {
+          (item.content || []).forEach((conditionItem) => {
+            if (conditionItem.id === targetObj.id) {
+              flag = false;
+            }
+          });
+          if (item.childNode) {
+            if (!this.canDelete(targetObj, item.childNode)) {
+              flag = false;
+            }
+          }
+        });
+      }
+      if (process && process.childNode) {
+        if (!this.canDelete(targetObj, process.childNode)) {
+          flag = false;
+        }
+      }
+      return flag;
     },
     // 点击选中组件
     clickComponent(target) {
@@ -839,7 +1282,7 @@ export default {
     // 组件详情更改
     changeComponentE(name, e) {
       console.log(name, e.target.value, this.clickItemId, this.componentList);
-      this.componentList = this.componentList.map(item => {
+      this.componentList = this.componentList.map((item) => {
         if (item.id === this.clickItemId) {
           let newItem = item;
           if (e.target.type === "checkbox") {
@@ -857,7 +1300,7 @@ export default {
     // 计算公式更改
     changeComponentFormula(formulaList) {
       console.log(formulaList, "计算公式数组");
-      this.componentList = this.componentList.map(item => {
+      this.componentList = this.componentList.map((item) => {
         if (item.id === this.clickItemId) {
           let newItem = item;
           newItem.formulaList = formulaList;
@@ -883,8 +1326,8 @@ export default {
     // 保存
     save() {
       console.log(this.componentList, JSON.stringify(this.componentList));
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -892,7 +1335,8 @@ export default {
   display: flex;
   justify-content: space-between;
   background: #f3f3f3;
-  height: calc(100vh - 75px);
+  height: calc(100vh - 80px);
+  // border: 1px solid #ccc;
 }
 .component-list {
   width: 300px;
@@ -921,7 +1365,9 @@ export default {
   }
 }
 .mobile {
-  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 340px;
   flex: none;
   .mobile-wrap {
@@ -1008,9 +1454,11 @@ export default {
   .title {
     border-bottom: 1px solid #ccc;
     padding: 10px;
+    height: 42px;
   }
   .component-detail-item {
     padding: 10px;
+    font-size: 12px;
     .component-detail-item-title {
       margin-bottom: 10px;
       .gray {

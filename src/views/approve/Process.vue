@@ -1,5 +1,6 @@
 <template>
   <div class="process">
+    <!-- <i class="iconfont" style="font-size: 30px">&#xe617;</i> -->
     <div class="left">
       <tree
         :process="process"
@@ -21,9 +22,10 @@
     />
     <a-button
       type="primary"
-      style="position: absolute; top: -50px;right: 200px;z-index: 9"
+      style="position: absolute; top: -50px; right: 200px; z-index: 9"
       @click="save"
-    >保存</a-button>
+      >保存</a-button
+    >
   </div>
 </template>
 
@@ -33,7 +35,7 @@ import drawer from "./components/processDrawer";
 export default {
   components: {
     Tree,
-    drawer
+    drawer,
   },
   data() {
     return {
@@ -45,35 +47,36 @@ export default {
         title: "发起人",
         content: "所有人",
         type: "originator",
-        isRoot: true,
         childNode: {
           conditions: [
             {
               title: "条件1",
-              content: "条件1content",
-              sort: 0
+              content: [{id: 'componentId1'}],
+              sort: 0,
+              type: "condition",
+              childNode: {
+                title: "222",
+                content: "222",
+                type: "approval",
+              },
             },
             {
               title: "条件2",
-              content: "条件2content",
-              sort: 1
+              content: [{id: 'componentId1'}],
+              type: "condition",
+              sort: 1,
             },
-            {
-              title: "条件3",
-              content: "条件3content",
-              sort: 2
-            }
           ],
           childNode: {
             title: "222",
             content: "222",
             type: "approval",
             childNode: {
-              type: "end"
-            }
-          }
-        }
-      }
+              type: "end",
+            },
+          },
+        },
+      },
     };
   },
   methods: {
@@ -90,10 +93,12 @@ export default {
       this.visible = false;
     },
     saveFormData(newData, originSort) {
-      console.log(newData, originSort);
-      if (this.currentProcess.type) {
+      console.log(newData, originSort, this.currentProcess);
+      if (this.currentProcess.type !== "condition") {
+        // 表示为非条件的节点情况
         this.currentProcess = Object.assign(this.currentProcess, newData);
       } else {
+        // 条件节点情况
         this.currentProcess = Object.assign(this.currentProcess, newData);
         this.formDataParentConditions.splice(originSort, 1);
         this.formDataParentConditions.splice(
@@ -114,7 +119,8 @@ export default {
       process.conditions.push({
         title: `条件${sort + 1}`,
         content: "",
-        sort
+        sort,
+        type: "condition",
       });
     },
     deleteCondition(index, process, parent) {
@@ -138,7 +144,7 @@ export default {
         process.conditions = process.conditions.map((item, index) => {
           return {
             ...item,
-            sort: index
+            sort: index,
           };
         });
       }
@@ -148,29 +154,52 @@ export default {
     addChildNode(process, type) {
       // 正常节点下的加号
       let newProcess = JSON.parse(JSON.stringify(process));
-      if (type === "condition") { // TODO: 要看this.process数据结构，看看condition是否可以跟节点放在同级，不行的话这个方法要改
-        process.conditions = [
-          {
-            title: "条件1",
-            content: "",
-            sort: 0
+      if (type === "condition") {
+        // TODO: 要看this.process数据结构，看看condition是否可以跟节点放在同级，不行的话这个方法要改
+        // process.conditions = [
+        //   {
+        //     title: "条件1",
+        //     content: "",
+        //     sort: 0,
+        //     type: 'condition',
+        //   },
+        //   {
+        //     title: "条件2",
+        //     content: "",
+        //     sort: 1,
+        //     type: 'condition',
+        //   },
+        // ];
+        // if (newProcess.conditions) {
+        //   process.childNode = {
+        //     childNode: newProcess.childNode,
+        //     conditions: newProcess.conditions,
+        //   };
+        // } else {
+        //   process.childNode = {
+        //     ...newProcess.childNode,
+        //   };
+        // }
+        // TODO: 要看this.process数据结构，这种是condition不可以和节点同级，出现就一定在childnode中
+        process.childNode = {
+          conditions: [
+            {
+              title: "条件1",
+              content: "",
+              sort: 0,
+              type: "condition",
+            },
+            {
+              title: "条件2",
+              content: "",
+              sort: 1,
+              type: "condition",
+            },
+          ],
+          childNode: {
+            ...newProcess.childNode,
           },
-          {
-            title: "条件2",
-            content: "",
-            sort: 1
-          }
-        ];
-        if (newProcess.conditions) {
-          process.childNode = {
-            childNode: newProcess.childNode,
-            conditions: newProcess.conditions
-          };
-        } else {
-          process.childNode = {
-            ...newProcess.childNode
-          };
-        }
+        };
       } else {
         delete process.conditions;
         process.childNode = {
@@ -178,7 +207,7 @@ export default {
           type: type,
           content: "",
           childNode: newProcess.childNode,
-          conditions: newProcess.conditions
+          conditions: newProcess.conditions,
         };
       }
       this.process = JSON.parse(JSON.stringify(this.process));
@@ -194,17 +223,17 @@ export default {
             {
               title: "条件1",
               content: "",
-              sort: 0
+              sort: 0,
             },
             {
               title: "条件2",
               content: "",
-              sort: 1
-            }
+              sort: 1,
+            },
           ],
           childNode: {
-            ...childNode
-          }
+            ...childNode,
+          },
         };
       } else {
         process.childNode = {
@@ -212,8 +241,8 @@ export default {
           type,
           content: "",
           childNode: {
-            ...childNode
-          }
+            ...childNode,
+          },
         };
       }
       this.process = JSON.parse(JSON.stringify(this.process));
@@ -225,7 +254,7 @@ export default {
         // 当前部分对象中有条件conditions字段
         parent.childNode = {
           conditions: process.conditions,
-          childNode: process.childNode
+          childNode: process.childNode,
         };
         console.log(parent.childNode);
       } else {
@@ -237,14 +266,15 @@ export default {
     },
     save() {
       console.log(this.process);
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .process {
-  background: #f5f5f7;
+  // background: #f5f5f7;
+  background: #fff;
   display: flex;
   height: calc(100vh - 80px);
   position: relative;
@@ -252,6 +282,7 @@ export default {
     flex: 1;
     text-align: center;
     overflow: auto;
+    padding-bottom: 20px
   }
 }
 </style>

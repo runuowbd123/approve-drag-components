@@ -2,22 +2,22 @@
   <div class="tree-wrap">
     <!-- 当前节点信息 -->
     <div
-      style="display: flex; flex-direction:column;align-items: center;background: #f5f5f7;"
+      style="display: flex; flex-direction:column;align-items: center;background: #fff;"
       v-if="process.type && process.type !== 'end'"
     >
       <div class="tree-item">
         <div
-          style="position:absolute;left:0;top:0px;width: 100%;background: #f5f5f7;z-index: 999;height: 40px"
-          v-if="process.isRoot"
+          style="position:absolute;left:0;top:0px;width: 100%;background: #fff;z-index: 999;height: 40px"
+          v-if="process.type === 'originator'"
         ></div>
         <div class="tree-item-border"></div>
-        <div class="tree-item-content" :style="process.isRoot? 'cursor: default': ''" @click="clickItem(process)">
+        <div class="tree-item-content" @click="clickItem(process)">
           <a-icon
             type="close"
             class="tree-item-content-close"
             style="color: #fff"
             @click.stop="deleteChildNode(process, parent)"
-            v-if="!process.isRoot"
+            v-if="process.type !== 'originator'"
           />
           <div
             class="tree-item-content-title"
@@ -187,9 +187,10 @@ export default {
       this.$emit("deleteCondition", index, process, parent);
     },
     clickItem(process, conditionsProcess) {
-      if(!process.isRoot) {
-        this.$emit("clickItem", process, conditionsProcess);
-      }
+      // if(process.type !== 'originator') {
+      //   this.$emit("clickItem", process, conditionsProcess);
+      // }
+      this.$emit("clickItem", process, conditionsProcess);
     }
   }
 };
@@ -203,7 +204,7 @@ export default {
     justify-content: center;
     position: relative;
     z-index: 999;
-    background: #f5f5f7;
+    background: #fff;
     .condition-vertival {
       height: 100%;
       width: 0;
@@ -283,7 +284,7 @@ export default {
       z-index: 999;
       position: relative;
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: 10px;
       box-shadow: 0 0 10px #ccc;
       .tree-item-content-title {
         display: flex;
@@ -291,8 +292,8 @@ export default {
         padding: 10px 15px;
         border-bottom: 1px solid #ccc;
         word-break: break-all;
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
       }
       .tree-item-content-content {
         display: flex;
@@ -312,7 +313,6 @@ export default {
     }
   }
   .add-button {
-    // background: #f5f5f7;
     padding: 20px;
     padding-bottom: 60px;
     position: relative;
@@ -329,7 +329,7 @@ export default {
     .plus {
       position: absolute;
       cursor: pointer;
-      left: calc(50% + 30px);
+      left: calc(50% + 10px);
       font-size: 20px;
       color: #1890ff;
     }
