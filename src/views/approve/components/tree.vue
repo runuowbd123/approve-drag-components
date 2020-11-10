@@ -2,16 +2,34 @@
   <div class="tree-wrap">
     <!-- 当前节点信息 -->
     <div
-      style="display: flex; flex-direction:column;align-items: center;background: #fff;"
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #fff;
+      "
       v-if="process.type && process.type !== 'end'"
     >
       <div class="tree-item">
         <div
-          style="position:absolute;left:0;top:0px;width: 100%;background: #fff;z-index: 999;height: 40px"
+          style="
+            position: absolute;
+            left: 0;
+            top: 0px;
+            width: 100%;
+            background: #fff;
+            z-index: 999;
+            height: 40px;
+          "
           v-if="process.type === 'originator'"
         ></div>
         <div class="tree-item-border"></div>
         <div class="tree-item-content" @click="clickItem(process)">
+          <a-icon
+            type="caret-down"
+            class="down-icon"
+            v-if="process.type !== 'originator'"
+          />
           <a-icon
             type="close"
             class="tree-item-content-close"
@@ -22,10 +40,18 @@
           <div
             class="tree-item-content-title"
             style="color: #fff"
-            :style="process.type==='originator' ? 'background:#576a95' : (process.type==='approval' ? 'background:#ff943e;' : 'background:#3296fa')"
-          >{{process.title}}</div>
+            :style="
+              process.type === 'originator'
+                ? 'background:#576a95'
+                : process.type === 'approval'
+                ? 'background:#ff943e;'
+                : 'background:#3296fa'
+            "
+          >
+            {{ process.title }}
+          </div>
           <div class="tree-item-content-content">
-            <div v-if="process.content">{{process.content}}</div>
+            <div v-if="process.content">{{ process.content }}</div>
             <div v-else style="color: #999">请设置</div>
           </div>
         </div>
@@ -39,9 +65,24 @@
         >
           <template slot="content">
             <div class="add-node">
-              <div @click="addChildNode(process, 'CCperson')" class="add-node-item">添加抄送人</div>
-              <div @click="addChildNode(process, 'approval')" class="add-node-item">添加审批人</div>
-              <div @click="addChildNode(process, 'condition')" class="add-node-item">添加条件</div>
+              <div
+                @click="addChildNode(process, 'CCperson')"
+                class="add-node-item"
+              >
+                添加抄送人
+              </div>
+              <div
+                @click="addChildNode(process, 'approval')"
+                class="add-node-item"
+              >
+                添加审批人
+              </div>
+              <div
+                @click="addChildNode(process, 'condition')"
+                class="add-node-item"
+              >
+                添加条件
+              </div>
             </div>
           </template>
           <a-icon type="plus-circle" class="plus" />
@@ -50,14 +91,26 @@
       </div>
     </div>
     <!-- 子节点条件节点 -->
-    <div class="tree" v-if="process.conditions && process.conditions.length > 0">
-      <div class="addcondition-button" @click="addCondition(process)">添加条件</div>
+    <div
+      class="tree"
+      v-if="process.conditions && process.conditions.length > 0"
+    >
+      <a-icon type="caret-down" class="addcondition-button-down-icon" />
+      <div class="addcondition-button" @click="addCondition(process)">
+        添加条件
+      </div>
       <div
         v-for="(item, index) in process.conditions"
         :key="index"
-        style="display: flex; flex-direction:column;align-items: center;position:relative"
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+        "
       >
         <div class="tree-item">
+          <a-icon type="caret-down" class="condition-down-icon" />
           <div class="tree-item-border"></div>
           <div class="tree-item-content" @click="clickItem(item, process)">
             <a-icon
@@ -66,11 +119,15 @@
               @click.stop="deleteCondition(index, process, parent)"
             />
             <div class="tree-item-content-title">
-              <div style="width: 110px;text-align:left;word-break: break-all;">{{item.title}}</div>
-              <span style="color: #999;">优先级{{item.sort + 1}}</span>
+              <div
+                style="width: 110px; text-align: left; word-break: break-all"
+              >
+                {{ item.title }}
+              </div>
+              <span style="color: #999">优先级{{ item.sort + 1 }}</span>
             </div>
             <div class="tree-item-content-content">
-              <div v-if="item.content">{{item.content}}</div>
+              <div v-if="item.content">{{ item.content }}</div>
               <div v-else style="color: #999">请设置</div>
             </div>
           </div>
@@ -84,9 +141,24 @@
           >
             <template slot="content">
               <div class="add-node">
-                <div @click="addChildNodeEnd(item, 'CCperson')" class="add-node-item">添加抄送人</div>
-                <div @click="addChildNodeEnd(item, 'approval')" class="add-node-item">添加审批人</div>
-                <div @click="addChildNodeEnd(item, 'condition')" class="add-node-item">添加条件</div>
+                <div
+                  @click="addChildNodeEnd(item, 'CCperson')"
+                  class="add-node-item"
+                >
+                  添加抄送人
+                </div>
+                <div
+                  @click="addChildNodeEnd(item, 'approval')"
+                  class="add-node-item"
+                >
+                  添加审批人
+                </div>
+                <div
+                  @click="addChildNodeEnd(item, 'condition')"
+                  class="add-node-item"
+                >
+                  添加条件
+                </div>
               </div>
             </template>
             <a-icon type="plus-circle" class="plus" />
@@ -106,15 +178,24 @@
         />
         <div class="condition-vertival"></div>
         <div class="border-bottom-right" v-if="index === 0" />
-        <div class="border-bottom-left" v-else-if="index === process.conditions.length - 1" />
+        <div
+          class="border-bottom-left"
+          v-else-if="index === process.conditions.length - 1"
+        />
         <div class="border-bottom-whole" v-else />
         <div class="border-top-right" v-if="index === 0" />
-        <div class="border-top-left" v-else-if="index === process.conditions.length - 1" />
+        <div
+          class="border-top-left"
+          v-else-if="index === process.conditions.length - 1"
+        />
         <div class="border-top-whole" v-else />
       </div>
     </div>
     <!-- 如果是条件节点后面还要跟一个加号 -->
-    <div class="add-button" v-if="process.conditions && process.conditions.length > 0">
+    <div
+      class="add-button"
+      v-if="process.conditions && process.conditions.length > 0"
+    >
       <a-popover
         :title="null"
         trigger="click"
@@ -123,9 +204,24 @@
       >
         <template slot="content">
           <div class="add-node">
-            <div @click="addChildNodeEnd(process, 'CCperson')" class="add-node-item">添加抄送人</div>
-            <div @click="addChildNodeEnd(process, 'approval')" class="add-node-item">添加审批人</div>
-            <div @click="addChildNodeEnd(process, 'condition')" class="add-node-item">添加条件</div>
+            <div
+              @click="addChildNodeEnd(process, 'CCperson')"
+              class="add-node-item"
+            >
+              添加抄送人
+            </div>
+            <div
+              @click="addChildNodeEnd(process, 'approval')"
+              class="add-node-item"
+            >
+              添加审批人
+            </div>
+            <div
+              @click="addChildNodeEnd(process, 'condition')"
+              class="add-node-item"
+            >
+              添加条件
+            </div>
           </div>
         </template>
         <a-icon type="plus-circle" class="plus" />
@@ -144,7 +240,10 @@
       @deleteChildNode="deleteChildNode"
       @clickItem="clickItem"
     />
-    <div v-if="process.type==='end'" class="end-item">流程结束</div>
+    <div v-if="process.type === 'end'" class="end-item">
+      <a-icon type="caret-down" class="end-item-down-icon" />
+      流程结束
+    </div>
   </div>
 </template>
 
@@ -157,15 +256,15 @@ export default {
       default: () => {
         return {};
       },
-      required: true
+      required: true,
     },
     parent: {
       type: Object,
       default: () => {
         return {};
       },
-      required: false
-    }
+      required: false,
+    },
   },
   data() {
     return {};
@@ -191,8 +290,8 @@ export default {
       //   this.$emit("clickItem", process, conditionsProcess);
       // }
       this.$emit("clickItem", process, conditionsProcess);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -208,7 +307,7 @@ export default {
     .condition-vertival {
       height: 100%;
       width: 0;
-      border-right: 1px solid #999;
+      border-right: 1px solid #998;
       position: absolute;
       left: 50%;
       top: 0;
@@ -226,42 +325,49 @@ export default {
       border-radius: 15px;
       color: #1890ff;
     }
+    .addcondition-button-down-icon {
+      position: absolute;
+      font-size: 22px;
+      top: -33px;
+      color: #998;
+      left: calc(50% - 11px);
+    }
     // .border-bottom-whole {
     //   width: 100%;
-    //   border-bottom: 1px solid #999;
+    //   border-bottom: 1px solid #998;
     //   position: absolute;
     //   bottom: 0;
     // }
     // .border-bottom-left {
     //   width: 50%;
-    //   border-bottom: 1px solid #999;
+    //   border-bottom: 1px solid #998;
     //   position: absolute;
     //   bottom: 0;
     //   left: 0;
     // }
     // .border-bottom-right {
     //   width: 50%;
-    //   border-bottom: 1px solid #999;
+    //   border-bottom: 1px solid #998;
     //   position: absolute;
     //   bottom: 0;
     //   right: 0;
     // }
     // .border-top-whole {
     //   width: 100%;
-    //   border-bottom: 1px solid #999;
+    //   border-bottom: 1px solid #998;
     //   position: absolute;
     //   top: 0;
     // }
     // .border-top-left {
     //   width: 50%;
-    //   border-bottom: 1px solid #999;
+    //   border-bottom: 1px solid #998;
     //   position: absolute;
     //   top: 0;
     //   left: 0;
     // }
     // .border-top-right {
     //   width: 50%;
-    //   border-bottom: 1px solid #999;
+    //   border-bottom: 1px solid #998;
     //   position: absolute;
     //   top: 0;
     //   right: 0;
@@ -273,11 +379,18 @@ export default {
     padding-top: 40px;
     position: relative;
     .tree-item-border {
-      border-right: 1px solid #999;
+      border-right: 1px solid #998;
       position: absolute;
       height: 100%;
       top: 0;
       left: 50%;
+    }
+    .condition-down-icon {
+      position: absolute;
+      font-size: 22px;
+      top: 24px;
+      color: #998;
+      left: calc(50% - 11px);
     }
     .tree-item-content {
       background: #fff;
@@ -286,6 +399,13 @@ export default {
       cursor: pointer;
       border-radius: 10px;
       box-shadow: 0 0 10px #ccc;
+      .down-icon {
+        position: absolute;
+        font-size: 22px;
+        top: -16px;
+        color: #998;
+        left: calc(50% - 11px);
+      }
       .tree-item-content-title {
         display: flex;
         align-items: center;
@@ -320,7 +440,7 @@ export default {
     flex-direction: column;
     align-items: center;
     .tree-item-border {
-      border-right: 1px solid #999;
+      border-right: 1px solid #998;
       position: absolute;
       height: 100%;
       top: 0;
@@ -351,5 +471,13 @@ export default {
   background: #fff;
   border-radius: 15px;
   margin: 0 auto;
+  position: relative;
+  .end-item-down-icon {
+    position: absolute;
+    font-size: 22px;
+    top: -16px;
+    color: #998;
+    left: calc(50% - 11px);
+  }
 }
 </style>

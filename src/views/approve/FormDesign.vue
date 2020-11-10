@@ -15,7 +15,7 @@
             filter=".undraggable"
           >
             <div
-              class="list-group-item"
+              class="list-group-item-hover"
               v-for="item in components.text"
               :key="item.id"
             >
@@ -33,11 +33,12 @@
             filter=".undraggable"
           >
             <div
-              class="list-group-item"
+              class="list-group-item-hover"
               v-for="item in components.number"
               :key="item.id"
             >
               {{ getcomponentName(item) }}
+              <a-icon :type="item.icon" />
             </div>
           </draggable>
           <!-- 选项 -->
@@ -51,7 +52,7 @@
             filter=".undraggable"
           >
             <div
-              class="list-group-item"
+              class="list-group-item-hover"
               v-for="item in components.option"
               :key="item.id"
             >
@@ -69,7 +70,7 @@
             filter=".undraggable"
           >
             <div
-              class="list-group-item"
+              class="list-group-item-hover"
               v-for="item in components.date"
               :key="item.id"
             >
@@ -87,7 +88,7 @@
             filter=".undraggable"
           >
             <div
-              class="list-group-item"
+              class="list-group-item-hover"
               v-for="item in components.other"
               :key="item.id"
             >
@@ -105,11 +106,13 @@
             @change="dragChange"
             :options="{ sort: false }"
             filter=".undraggable"
+            :disabled="hasGroupComponent()"
           >
             <div
-              class="list-group-item"
+              :class="hasGroupComponent() ? 'list-group-item' : 'list-group-item-hover'"
               v-for="item in components.attendance"
               :key="item.id"
+              :style="hasGroupComponent() ? 'cursor: not-allowed' : ''"
             >
               {{ getcomponentName(item) }}
             </div>
@@ -738,7 +741,7 @@
             <draggable
               class="list-group"
               :list="clickItem.optionList"
-              :group="{ name: 'comp' }"
+              :group="{ name: 'comp', pull: false, put: false }"
             >
               <div
                 v-for="(item, index) in clickItem.optionList"
@@ -943,6 +946,8 @@
         <div class="component-detail-item-content">
           <a-input v-model="clickItem.label" :maxLength="20" />
         </div>
+        <div style="color:#999999;margin-bottom:10px;margin-top:-10px" v-if="clickItem.type === 'annex'">前端上传的附件大小不能超过100M</div>
+        
         <div class="component-detail-item-title">
           验证（勾选后可作为流程条件）
         </div>
@@ -1315,14 +1320,24 @@ export default {
     // 增加选项
     plusOption(optionList) {
       if (optionList.length < 20) {
-        optionList.push({ name: "" });
+        optionList.push({ name: `选项${optionList.length + 1}` });
       }
     },
     // 删除选项
     deleteOption(optionList, index) {
       optionList.splice(index, 1);
     },
-
+    // 判断是否已经有控件组
+    hasGroupComponent() {
+      console.log('jjjjjjjjjjjjjj')
+      let flag = false;
+      this.componentList.forEach((item) => {
+        if (item.category === "attendance") {
+          flag = true;
+        }
+      });
+      return flag;
+    },
     // 保存
     save() {
       console.log(this.componentList, JSON.stringify(this.componentList));
@@ -1335,7 +1350,7 @@ export default {
   display: flex;
   justify-content: space-between;
   background: #f3f3f3;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 200px);
   // border: 1px solid #ccc;
 }
 .component-list {
@@ -1354,13 +1369,31 @@ export default {
     flex-wrap: wrap;
     .list-group-item {
       position: relative;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       width: 45%;
       margin: 0 5% 10px 0;
       padding: 5px 10px;
       background-color: #fff;
       border: 1px solid #ccc;
       cursor: move;
+    }
+    .list-group-item-hover{
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 45%;
+      margin: 0 5% 10px 0;
+      padding: 5px 10px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      cursor: move;
+      &:hover{
+        border: 1px solid #1890ff;
+        color: #1890ff;
+      }
     }
   }
 }
@@ -1375,6 +1408,19 @@ export default {
     // background: #fff;
     // border-radius: 30px;
     // box-shadow: 0px 0px 10px #ccc;
+    // 这是为了左边组件移到右边后，鼠标放开前也有相同样式
+    .list-group-item-hover{
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 45%;
+      margin: 0 5% 10px 0;
+      padding: 5px 10px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      cursor: move;
+    }
   }
   .list-group-item1 {
     position: relative;
@@ -1389,6 +1435,7 @@ export default {
   .list-group-item-active {
     border: 1px solid #1890ff;
   }
+  // 移动到的位置加根红线
   // .sortable-chosen:before {
   //   border-top: 2px solid red;
   //   height: 10px;
@@ -1451,6 +1498,7 @@ export default {
   flex: none;
   border-left: 1px solid #ccc;
   background: #fff;
+  overflow:auto;
   .title {
     border-bottom: 1px solid #ccc;
     padding: 10px;

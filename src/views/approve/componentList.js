@@ -23,7 +23,7 @@ const components= {
   //     type: "explain",
   //     name: "说明文字",
   //     id: 'c3',
-  //     content: ""
+  //     content: "请输入说明文字"
   //   }
   // ],
   number: [
@@ -35,6 +35,7 @@ const components= {
       label: "数字输入框",
       placeholder: "请输入数字",
       unit: '个',
+      icon: 'edit',
       required: false
     },
     {
@@ -44,6 +45,7 @@ const components= {
       id: 'c5',
       label: "金额",
       placeholder: "请输入金额",
+      icon: 'edit',
       required: false
     },
     {
@@ -53,6 +55,7 @@ const components= {
       id: 'c6',
       label: "计算公式",
       formulaList: [],
+      icon: 'edit',
       required: false
     }
   ],
@@ -65,7 +68,7 @@ const components= {
   //     label: "单选框",
   //     placeholder: "请选择",
   //     required: false,
-  //     optionList: [{name: '选项一'}]
+  //     optionList: [{name: '选项1'}]
   //   },
   //   {
   //     category: "option",
@@ -75,7 +78,7 @@ const components= {
   //     label: "多选框",
   //     placeholder: "请选择",
   //     required: false,
-  //     optionList: [{name: '选项一'}]
+  //     optionList: [{name: '选项1'}]
   //   },
   // ],
   // date: [
@@ -183,9 +186,10 @@ const components= {
       category: 'attendance',
       type: 'goOut',
       id: 'c20',
-      typeList: [{name: '选项一'}],
+      typeList: [{name: '选项1'}],
       timeUnit: 'hour'
     },
+    
     {
       category: 'attendance',
       type: 'businessTravel',
