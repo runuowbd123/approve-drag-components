@@ -8,7 +8,7 @@
         align-items: center;
         background: #fff;
       "
-      v-if="process.type && process.type !== 'end'"
+      v-if="process.type && process.type !== 'end' && process.type !== 'conditions'"
     >
       <div class="tree-item">
         <div
@@ -24,7 +24,7 @@
           v-if="process.type === 'originator'"
         ></div>
         <div class="tree-item-border"></div>
-        <div class="tree-item-content" @click="clickItem(process)">
+        <div class="tree-item-content" @click="clickItem(process)" :style="process.type === 'originator'?'cursor: default' : ''">
           <a-icon
             type="caret-down"
             class="down-icon"
@@ -69,19 +69,31 @@
                 @click="addChildNode(process, 'CCperson')"
                 class="add-node-item"
               >
-                添加抄送人
+                <a-icon
+                  type="user"
+                  style="font-size: 30px; margin-bottom: 10px"
+                />
+                抄送人
               </div>
               <div
                 @click="addChildNode(process, 'approval')"
                 class="add-node-item"
               >
-                添加审批人
+                <a-icon
+                  type="user"
+                  style="font-size: 30px; margin-bottom: 10px"
+                />
+                审批人
               </div>
               <div
                 @click="addChildNode(process, 'condition')"
                 class="add-node-item"
               >
-                添加条件
+                <a-icon
+                  type="user"
+                  style="font-size: 30px; margin-bottom: 10px"
+                />
+                分支
               </div>
             </div>
           </template>
@@ -142,22 +154,34 @@
             <template slot="content">
               <div class="add-node">
                 <div
-                  @click="addChildNodeEnd(item, 'CCperson')"
+                  @click="addChildNode(item, 'CCperson')"
                   class="add-node-item"
                 >
-                  添加抄送人
+                  <a-icon
+                    type="user"
+                    style="font-size: 30px; margin-bottom: 10px"
+                  />
+                  抄送人
                 </div>
                 <div
-                  @click="addChildNodeEnd(item, 'approval')"
+                  @click="addChildNode(item, 'approval')"
                   class="add-node-item"
                 >
-                  添加审批人
+                  <a-icon
+                    type="user"
+                    style="font-size: 30px; margin-bottom: 10px"
+                  />
+                  审批人
                 </div>
                 <div
-                  @click="addChildNodeEnd(item, 'condition')"
+                  @click="addChildNode(item, 'condition')"
                   class="add-node-item"
                 >
-                  添加条件
+                  <a-icon
+                    type="user"
+                    style="font-size: 30px; margin-bottom: 10px"
+                  />
+                  分支
                 </div>
               </div>
             </template>
@@ -171,7 +195,6 @@
           :parent="item"
           @addCondition="addCondition"
           @addChildNode="addChildNode"
-          @addChildNodeEnd="addChildNodeEnd"
           @deleteCondition="deleteCondition"
           @deleteChildNode="deleteChildNode"
           @clickItem="clickItem"
@@ -205,22 +228,34 @@
         <template slot="content">
           <div class="add-node">
             <div
-              @click="addChildNodeEnd(process, 'CCperson')"
+              @click="addChildNode(process, 'CCperson')"
               class="add-node-item"
             >
-              添加抄送人
+              <a-icon
+                type="user"
+                style="font-size: 30px; margin-bottom: 10px"
+              />
+              抄送人
             </div>
             <div
-              @click="addChildNodeEnd(process, 'approval')"
+              @click="addChildNode(process, 'approval')"
               class="add-node-item"
             >
-              添加审批人
+              <a-icon
+                type="user"
+                style="font-size: 30px; margin-bottom: 10px"
+              />
+              审批人
             </div>
             <div
-              @click="addChildNodeEnd(process, 'condition')"
+              @click="addChildNode(process, 'condition')"
               class="add-node-item"
             >
-              添加条件
+              <a-icon
+                type="user"
+                style="font-size: 30px; margin-bottom: 10px"
+              />
+              分支
             </div>
           </div>
         </template>
@@ -235,7 +270,6 @@
       :parent="process"
       @addCondition="addCondition"
       @addChildNode="addChildNode"
-      @addChildNodeEnd="addChildNodeEnd"
       @deleteCondition="deleteCondition"
       @deleteChildNode="deleteChildNode"
       @clickItem="clickItem"
@@ -276,9 +310,6 @@ export default {
     addCondition(process) {
       this.$emit("addCondition", process);
     },
-    addChildNodeEnd(process, type) {
-      this.$emit("addChildNodeEnd", process, type);
-    },
     deleteChildNode(process, parent) {
       this.$emit("deleteChildNode", process, parent);
     },
@@ -286,10 +317,10 @@ export default {
       this.$emit("deleteCondition", index, process, parent);
     },
     clickItem(process, conditionsProcess) {
-      // if(process.type !== 'originator') {
-      //   this.$emit("clickItem", process, conditionsProcess);
-      // }
-      this.$emit("clickItem", process, conditionsProcess);
+      if (process.type !== "originator") {
+        this.$emit("clickItem", process, conditionsProcess);
+      }
+      // this.$emit("clickItem", process, conditionsProcess);
     },
   },
 };
@@ -318,12 +349,16 @@ export default {
       top: -17px;
       left: calc(50% - 40px);
       width: 80px;
-      padding: 10px 0;
+      padding: 5px 0;
       box-shadow: 0 0 10px #ccc;
       background: #fff;
       z-index: 99999;
-      border-radius: 15px;
+      border-radius: 10px;
       color: #1890ff;
+      transition: 200ms;
+      &:hover{
+        font-size: 16px;
+      }
     }
     .addcondition-button-down-icon {
       position: absolute;
@@ -450,18 +485,25 @@ export default {
       position: absolute;
       cursor: pointer;
       left: calc(50% + 10px);
-      font-size: 20px;
+      font-size: 22px;
       color: #1890ff;
+      transition: 200ms;
+      &:hover{
+        font-size: 26px;
+      }
     }
   }
 }
 .add-node {
   display: flex;
   .add-node-item {
-    width: 120px;
-    text-align: center;
-    padding: 10px;
+    width: 100px;
+    padding: 10px 0;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
   }
 }
 .end-item {

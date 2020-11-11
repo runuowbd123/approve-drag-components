@@ -22,7 +22,7 @@
         </template> -->
         <a-avatar style="vertical-align:top;" icon="user" />
         <a-button class="color51" style="padding:0 5px;" type="link">{{info.curr.loginAcctName}}</a-button>
-        <a-button type="link" @click="layout">退出</a-button>
+        <!-- <a-button type="link" @click="layout">退出</a-button> -->
       </div>
     </div>
     <!-- <div class="layout-asider" v-if="info.curr.entpIsFormal || info.curr.entpIsAuth"> -->
