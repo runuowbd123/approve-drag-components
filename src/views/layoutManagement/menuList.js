@@ -14,5 +14,9 @@ const menuList = [
     key: "/websockettest1",
     title: 'websockettest1',
   },
+  {
+    key: '/map',
+    title: 'map'
+  }
 ];
 export default menuList;

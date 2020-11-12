@@ -64,6 +64,14 @@ export default [{
         isBack: false,
         breadTitle: "",
       },
-    }, ],
+    }, {
+      path: "map",
+      name: "map",
+      component: () => import("@/views/map/map.vue"),
+      meta: {
+        isBack: false,
+        breadTitle: "",
+      },
+    }],
   },
 ];
