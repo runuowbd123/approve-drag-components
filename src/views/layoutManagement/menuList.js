@@ -17,6 +17,14 @@ const menuList = [
   {
     key: '/map',
     title: 'map'
+  },
+  {
+    key: '/im',
+    title: 'im'
+  },
+  {
+    key: '/echarts',
+    title: 'echarts'
   }
 ];
 export default menuList;

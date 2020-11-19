@@ -72,6 +72,22 @@ export default [{
         isBack: false,
         breadTitle: "",
       },
+    },{
+      path: "im",
+      name: "im",
+      component: () => import("@/views/im/im.vue"),
+      meta: {
+        isBack: false,
+        breadTitle: "",
+      },
+    },{
+      path: "echarts",
+      name: "echarts",
+      component: () => import("@/views/echarts/echarts.vue"),
+      meta: {
+        isBack: false,
+        breadTitle: "",
+      },
     }],
   },
 ];
