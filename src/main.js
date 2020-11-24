@@ -13,6 +13,7 @@ import Vant from 'vant'
 import TIM from 'tim-js-sdk';
 import COS from "cos-js-sdk-v5";
 import genTestUserSig from './GenerateTestUserSig'
+import echarts from 'echarts'
 
 let options = {
   SDKAppID: 1400449484// 接入时需要将0替换为您的即时通信 IM 应用的 SDKAppID
@@ -37,6 +38,7 @@ window.TIM = TIM
 Vue.prototype.tim = tim
 Vue.prototype.TIM = TIM
 Vue.prototype.$genTestUserSig = genTestUserSig;
+Vue.prototype.$echarts = echarts
 
 let _this = new Vue({
   router,
