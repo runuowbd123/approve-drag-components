@@ -1,10 +1,5 @@
 <template>
   <div>
-    <select>
-      <option value="1">1</option>
-      <option value="2">2</option>
-    </select>
-     <a-date-picker />
     当前账号：
     <a-select style="width: 200px" v-model="userId">
       <a-select-option
