@@ -1,110 +1,138 @@
 <template>
-  <div class="member-select">
-    <div class="left">
-      <div class="selected-list">
-        <div
-          class="selected-tag"
-          v-for="(item,index) in selectedList"
-          :key="index"
-          @click="deleteMember(item.id)"
-        >
-          <span>{{item.name}}</span>
-          <span v-if="item.number > 0">({{item.number}})人</span>
-          <span class="close">×</span>
-        </div>
-        <a-select
-          show-search
-          :value="inputvalue"
-          placeholder="请输入姓名"
-          style="width: 100px;margin: 0 10px 10px 0"
-          :default-active-first-option="false"
-          :show-arrow="false"
-          :filter-option="false"
-          :not-found-content="null"
-          @search="handleSearch"
-          @change="handleChange"
-          :dropdownMatchSelectWidth="false"
-        >
-          <a-select-option v-for="item in filterList" :key="item.id" :item="item">
-            <div
-              style="display: flex;width: 200px;box-sizing: border-box;height: 55px;align-items: center"
-            >
-              <img
-                src="../assets/images/s2.jpg"
-                alt="头像"
-                style="width: 40px;height: 40px;border-radius: 20px"
-              />
-              <div
-                style="height: 55px;margin-left: 10px;display: flex; flex-direction: column; justify-content: space-around"
-              >
-                <div style="font-size: 16px;color: #000">{{ item.name }}</div>
-                <div style="font-size: 12px">XXX部门</div>
-              </div>
-            </div>
-          </a-select-option>
-        </a-select>
-      </div>
-      <div class="button-list">
-        <a-button
-          type="primary"
-          style="margin-right: 20px"
-          :disabled="selectedList.length === 0"
-          @click="onOk"
-        >确定</a-button>
-        <a-button @click="onCancel">取消</a-button>
-      </div>
-    </div>
-    <div class="right">
-      <a-breadcrumb style="flex: none;padding-left: 20px;">
-        <a-breadcrumb-item
-          :style="index === breadList.length - 1 ? 'cursor: pointer; color: #ccc': 'cursor: pointer; color: #000'"
-          v-for="(item, index) in breadList"
-          :key="index"
-          :class="index === breadList.length - 1 ? 'bread-forbidden' : 'bread'"
-        >
-          <span @click="changeBread(item)">{{item.name}}</span>
-        </a-breadcrumb-item>
-      </a-breadcrumb>
-      <div class="member-list">
-        <template>
-          <div class="member-item" @click.prevent="selectMember('all')">
-            <a-radio :checked="isSelectedAll()">全选</a-radio>
-          </div>
-          <div
-            v-for="(item, index) in memberList"
+  <a-modal
+    :maskClosable="false"
+    v-if="visible"
+    :visible="visible"
+    :title="title"
+    @ok="onOk"
+    @cancel="onCancel"
+    width="720px"
+  >
+    <div class="member-select">
+      <div style="width: 50%;">
+        <a-breadcrumb style="flex: none;padding-left: 20px;">
+          <a-breadcrumb-item
+            :style="index === breadList.length - 1 ? 'cursor: pointer; color: #ccc': 'cursor: pointer; color: #000'"
+            v-for="(item, index) in breadList"
             :key="index"
-            class="member-item"
-            @click.prevent="selectMember(item)"
+            :class="index === breadList.length - 1 ? 'bread-forbidden' : 'bread'"
           >
-            <a-radio :checked="isSelected(item)">
-              <img
-                v-if="item.img"
-                src="../assets/images/s2.jpg"
-                alt="头像"
-                style="width: 40px;height: 40px;border-radius: 20px;margin-right: 5px"
-              />
-              {{item.name}}
-              <span v-if="item.number > 0">({{item.number}})</span>
-            </a-radio>
-            <div
-              class="lower-level"
-              v-if="item.number > 0"
-              @click.stop="changeLevel(item)"
-              :style="isSelected(item) ? 'cursor: not-allowed' : 'cursor: pointer'"
-            >下级</div>
+            <span @click="changeBread(item)">{{item.name}}</span>
+          </a-breadcrumb-item>
+        </a-breadcrumb>
+        
+        <div class="left">
+          <a-spin :spinning="loading">
+            <div class="member-list">
+              <template>
+                <div class="member-item" @click.prevent="selectMember('all')">
+                  <a-checkbox :checked="isSelectedAll()">全选</a-checkbox>
+                </div>
+                <div
+                  v-for="(item, index) in memberList"
+                  :key="index"
+                  class="member-item"
+                  @click.prevent="selectMember(item)"
+                >
+                  <a-checkbox
+                    :checked="isSelected(item)"
+                    :style="isSelected(item) && item.deptId ? 'color: #ccc': ''"
+                  >
+                    <qfy-avatar :image="item.img" :name="item.name" v-if="item.qfyAcctId" />
+                    {{item.name}}
+                    <span v-if="item.deptId && item.number > -1">({{item.number}})</span>
+                  </a-checkbox>
+                  <div
+                    class="lower-level"
+                    v-if="item.deptId"
+                    @click.stop="changeLevel(item)"
+                    :style="isSelected(item) ? 'cursor: not-allowed' : 'cursor: pointer'"
+                  >
+                    <a-icon type="apartment" class="icon" />下级
+                  </div>
+                </div>
+              </template>
+            </div>
+          </a-spin>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="selected-list">
+          <div
+            class="selected-tag"
+            v-for="(item,index) in selectedList"
+            :key="index"
+            @click="deleteMember(item.id)"
+          >
+            <span>{{item.name}}</span>
+            <span v-if="item.deptId && item.number > -1">({{item.number}})人</span>
+            <a-tag color="blue" v-if="item.deptId" style="margin-left: 5px">部门</a-tag>
+            <span class="close">×</span>
           </div>
-        </template>
+          <a-select
+            :loading="findPersonLoading"
+            show-search
+            :value="inputvalue"
+            placeholder="请输入姓名"
+            style="width: 105px;margin: 0 10px 10px 0"
+            :default-active-first-option="false"
+            :show-arrow="false"
+            :filter-option="false"
+            :not-found-content="null"
+            @search="handleSearch"
+            @change="handleChange"
+            :dropdownMatchSelectWidth="false"
+          >
+            <a-select-option v-for="item in filterList" :key="item.id" :item="item">
+              <div
+                style="display: flex;width: 200px;box-sizing: border-box;height: 55px;align-items: center"
+              >
+                <qfy-avatar :image="item.img" :name="item.name" v-if="item.qfyAcctId" />
+                <div
+                  style="height: 55px;margin-left: 10px;display: flex; flex-direction: column; justify-content: space-around"
+                >
+                  <div style="font-size: 16px;color: #000">{{ item.name }}</div>
+                  <div style="font-size: 12px">{{ item.deptName }}</div>
+                </div>
+              </div>
+            </a-select-option>
+          </a-select>
+        </div>
       </div>
     </div>
-  </div>
+  </a-modal>
 </template>
 
 <script>
+import api from "@/api/api";
 export default {
   props: {
     defaultSelect: {
       type: Array,
       default: () => [],
+      required: false
+    },
+    visible: {
+      type: Boolean,
+      default: false,
+      required: false
+    },
+    title: {
+      type: String,
+      default: "选择员工",
+      required: false
+    },
+    findPersonFunction: {
+      // 搜索人接口
+      type: String,
+      default: "acctFindAccts",
+      required: false
+    },
+    getDeptAcctsFunction: {
+      // 获取左边所选部门的人员和子部门
+      type: String,
+      default: "getDeptAccts",
       required: false
     }
   },
@@ -112,41 +140,43 @@ export default {
     return {
       memberList: [], // 右侧选择列表中的数据
       selectedList: [], // 左侧选中的列表数据结构{name: '111', id: 111, number: 11}
+      loading: false, // 左侧加载loading
       inputvalue: undefined, // 输入框
+      findPersonLoading: false, // 输入框搜索loading
       filterList: [], // 左侧输入框下拉框列表
       breadList: [] // 面包屑
     };
   },
   created() {
+    // 搜人的时候需要做个防抖
+    console.log(this.$utils)
+    this.findPersonDebounce = this.$utils._debounce(this.findPerson, 500);
     // 初始化赋值默认已选择的人
     if (this.defaultSelect && this.defaultSelect.length > 0) {
-      this.selectedList = this.defaultSelect.map((item) => {
+      this.selectedList = this.defaultSelect.map(item => {
         if (item.deptId) {
           return {
             ...item,
             id: item.deptId,
             name: item.deptName
-          }
+          };
         } else {
           return {
             ...item,
             id: item.qfyAcctId,
             name: item.qfyAcctName
-          }
+          };
         }
-      })
+      });
     }
     // 这里需要给面包屑赋值初始第一个对象
     const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-    const targetObj = userInfo.entps.find(item => {
-      return item.id === userInfo.curr.id;
-    });
     this.breadList.push({
-      ...targetObj,
-      deptPId: "0",
-      deptName: targetObj.entpName,
+      ...userInfo,
+      deptId: "0",
+      deptName: userInfo.entpName,
       id: "0",
-      name: targetObj.entpName
+      name: userInfo.entpName
     });
     console.log("userInfo", userInfo, "breadList", this.breadList);
     // 再去获取右边的列表
@@ -176,20 +206,30 @@ export default {
     },
     handleSearch(value) {
       // 搜索框搜索
-      console.log("search");
-      const data = [
-        {
-          qfyAcctName: "请问",
-          qfyAcctId: 'id123'
-        }
-      ];
-      this.filterList = data.map((item) => {
-        return {
-          ...item,
-          id: item.qfyAcctId,
-          name: item.qfyAcctName
-        }
-      })
+      console.log("search", value);
+      this.findPersonDebounce(value);
+    },
+    findPerson(value) {
+      // this.findPersonLoading = true;
+      // api[this.findPersonFunction]({
+      //   acctName: value,
+      //   specialShow: "1"
+      // })
+      //   .then(res => {
+      //     console.log(res);
+      //     const data = res.data;
+      //     this.filterList = data.map(item => {
+      //       return {
+      //         ...item,
+      //         id: item.qfyAcctId,
+      //         name: item.qfyAcctName
+      //       };
+      //     });
+      //     this.findPersonLoading = false;
+      //   })
+      //   .catch(e => {
+      //     this.findPersonLoading = false;
+      //   });
     },
     handleChange(value, obj) {
       // 搜索框点击选择搜索出来的人员时调用
@@ -215,18 +255,12 @@ export default {
         return item.id !== id;
       });
     },
-    onOk() {
-      console.log("确定,选中的人员", this.selectedList);
-    },
-    onCancel() {
-      console.log("取消");
-    },
     changeBread(targetObj) {
       // 点击面包屑
       const targetIndex = this.breadList.findIndex(item => {
         return item.id === targetObj.id;
       });
-      console.log(targetIndex);
+      // console.log(targetIndex);
       if (targetIndex !== this.breadList.length - 1) {
         this.breadList = this.breadList.slice(0, targetIndex + 1);
         this.getMemberList();
@@ -234,46 +268,36 @@ export default {
     },
     getMemberList() {
       console.log("获取memberList");
-      const data = [
-        {
-          deptName: "销售部",
-          deptId: 1,
-          number: 12
-        },
-        {
-          deptName: "研发部",
-          deptId: 2,
-          number: 23
-        },
-        {
-          deptName: "客服部",
-          deptId: 3,
-          number: 22
-        },
-        {
-          qfyAcctName: "蔡总",
-          qfyAcctId: 111
-        },
-        {
-          qfyAcctName: "蔡经理",
-          qfyAcctId: 222
-        }
-      ];
-      this.memberList = data.map((item) => {
-        if (item.deptId) {
-          return {
-            ...item,
-            id: item.deptId,
-            name: item.deptName
-          }
-        } else {
-          return {
-            ...item,
-            id: item.qfyAcctId,
-            name: item.qfyAcctName
-          }
-        }
-      })
+      const currentBread = this.breadList[this.breadList.length - 1];
+      console.log(currentBread);
+      // this.loading = true;
+      // api[this.getDeptAcctsFunction]({
+      //   deptId: currentBread.deptId
+      // })
+      //   .then(res => {
+      //     console.log(res);
+      //     const data = res.data;
+      //     const list = data.acctList.concat(data.deptList);
+      //     this.memberList = list.map(item => {
+      //       if (item.deptId) {
+      //         return {
+      //           ...item,
+      //           id: item.deptId,
+      //           name: item.deptName
+      //         };
+      //       } else {
+      //         return {
+      //           ...item,
+      //           id: item.qfyAcctId,
+      //           name: item.qfyAcctName
+      //         };
+      //       }
+      //     });
+      //     this.loading = false;
+      //   })
+      //   .catch(e => {
+      //     this.loading = false;
+      //   });
     },
     selectMember(targetObj) {
       // 右侧点击radio按钮事件
@@ -318,16 +342,29 @@ export default {
       if (!this.isSelected(targetObj)) {
         this.breadList.push(targetObj);
         console.log(this.breadList);
-        // this.getMemberList();
-        this.memberList = [
-          {
-            qfyAcctName: "测试1",
-            qfyAcctId: 43,
-            name: "测试1",
-            id: 43
-          }
-        ];
+        this.getMemberList();
       }
+    },
+    onOk() {
+      const personList = this.selectedList.filter(item => {
+        return item.qfyAcctId;
+      });
+      const deptList = this.selectedList.filter(item => {
+        return item.deptId;
+      });
+      console.log(
+        "确定,选中的数组",
+        this.selectedList,
+        "部门数组",
+        deptList,
+        "人员数组",
+        personList
+      );
+      this.$emit("onOk", this.selectedList, deptList, personList);
+    },
+    onCancel() {
+      console.log("取消");
+      this.$emit("onCancel");
     }
   }
 };
@@ -336,15 +373,12 @@ export default {
 .member-select {
   width: 680px;
   height: 490px;
-  overflow: auto;
   display: flex;
-  border: 1px solid #ccc;
-  .left {
+  .right {
     width: 50%;
-    border-right: 1px solid #ccc;
     box-sizing: border-box;
     overflow: auto;
-    padding: 20px 20px;
+    padding: 0 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -371,11 +405,12 @@ export default {
       }
     }
   }
-  .right {
-    width: 50%;
-    padding: 15px 0;
+  .left {
     display: flex;
     flex-direction: column;
+    height: calc(100% - 20px);
+    overflow: auto;
+    border-right: 1px solid #ccc;
     .bread {
       &:hover {
         color: #1890ff !important;
@@ -385,13 +420,13 @@ export default {
       cursor: not-allowed !important;
     }
     .member-list {
-      flex: 1;
-      overflow: auto;
       margin-top: 10px;
       .member-item {
         height: 50px;
         padding: 0 20px;
         position: relative;
+        display: flex;
+        align-items: center;
         &:hover {
           background: rgb(241, 241, 242);
         }
@@ -413,6 +448,9 @@ export default {
           cursor: pointer;
           &:hover {
             color: #1890ff;
+          }
+          .icon {
+            margin-right: 5px;
           }
         }
       }
