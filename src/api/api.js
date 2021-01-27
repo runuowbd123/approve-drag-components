@@ -13,7 +13,6 @@ let api = {
   apiUrl = {
     // Post 接口
     login01: "/qfyLogin", // 登录
-    login02: "/getLoginInfo", // 登录2
 
     forgot01: "/acct/getPhone", // 忘记密码--确认账户
     forgot02: "/acct/sendNote", // 忘记密码--发送验证码
