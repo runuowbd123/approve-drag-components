@@ -1350,7 +1350,7 @@ export default {
   display: flex;
   justify-content: space-between;
   background: #f3f3f3;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 80px);
   // border: 1px solid #ccc;
 }
 .component-list {
@@ -1403,11 +1403,12 @@ export default {
   justify-content: center;
   width: 340px;
   flex: none;
+  // margin-top: 40px;
   .mobile-wrap {
-    // padding: 20px 20px;
-    // background: #fff;
-    // border-radius: 30px;
-    // box-shadow: 0px 0px 10px #ccc;
+    padding: 20px 20px;
+    background: #fff;
+    border-radius: 30px;
+    box-shadow: 0px 0px 10px #ccc;
     // 这是为了左边组件移到右边后，鼠标放开前也有相同样式
     .list-group-item-hover{
       position: relative;
@@ -1436,16 +1437,16 @@ export default {
     border: 1px solid #1890ff;
   }
   // 移动到的位置加根红线
-  // .sortable-chosen:before {
-  //   border-top: 2px solid red;
-  //   height: 10px;
-  //   width: 100%;
-  //   content: "";
-  //   display: block;
-  //   position: absolute;
-  //   top: -10px;
-  //   left: 0;
-  // }
+  .sortable-chosen:before {
+    border-top: 2px solid red;
+    height: 10px;
+    width: 100%;
+    content: "";
+    display: block;
+    position: absolute;
+    top: -10px;
+    left: 0;
+  }
   .close {
     position: absolute;
     top: 0px;

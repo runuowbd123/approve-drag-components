@@ -367,46 +367,46 @@ export default {
       color: #998;
       left: calc(50% - 11px);
     }
-    // .border-bottom-whole {
-    //   width: 100%;
-    //   border-bottom: 1px solid #998;
-    //   position: absolute;
-    //   bottom: 0;
-    // }
-    // .border-bottom-left {
-    //   width: 50%;
-    //   border-bottom: 1px solid #998;
-    //   position: absolute;
-    //   bottom: 0;
-    //   left: 0;
-    // }
-    // .border-bottom-right {
-    //   width: 50%;
-    //   border-bottom: 1px solid #998;
-    //   position: absolute;
-    //   bottom: 0;
-    //   right: 0;
-    // }
-    // .border-top-whole {
-    //   width: 100%;
-    //   border-bottom: 1px solid #998;
-    //   position: absolute;
-    //   top: 0;
-    // }
-    // .border-top-left {
-    //   width: 50%;
-    //   border-bottom: 1px solid #998;
-    //   position: absolute;
-    //   top: 0;
-    //   left: 0;
-    // }
-    // .border-top-right {
-    //   width: 50%;
-    //   border-bottom: 1px solid #998;
-    //   position: absolute;
-    //   top: 0;
-    //   right: 0;
-    // }
+    .border-bottom-whole {
+      width: 100%;
+      border-bottom: 1px solid #998;
+      position: absolute;
+      bottom: 0;
+    }
+    .border-bottom-left {
+      width: 50%;
+      border-bottom: 1px solid #998;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+    .border-bottom-right {
+      width: 50%;
+      border-bottom: 1px solid #998;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+    .border-top-whole {
+      width: 100%;
+      border-bottom: 1px solid #998;
+      position: absolute;
+      top: 0;
+    }
+    .border-top-left {
+      width: 50%;
+      border-bottom: 1px solid #998;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .border-top-right {
+      width: 50%;
+      border-bottom: 1px solid #998;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
   }
   .tree-item {
     width: 260px;
