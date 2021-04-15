@@ -2,7 +2,8 @@
   <div>
     <div class="layout-header">
       <div class="layout-header-logo">
-        <!-- <img src="../../assets/images/login-bg.png" /> -->
+        <!-- <img src="../../assets/imgs/logo.jpg" /> -->
+        <span style="margin-left: 10px">Demo总结</span>
       </div>
       <div class="layout-header-right">
         <!-- <template v-if="info.curr.entpIsFormal || info.curr.entpIsAuth">
@@ -20,8 +21,15 @@
           </div>
           <div style="margin-right: 10px;color: #000" v-else>{{entpName}}</div>
         </template> -->
-        <a-avatar style="vertical-align:top;" icon="user" />
-        <a-button class="color51" style="padding:0 5px;" type="link">{{info.curr.loginAcctName}}</a-button>
+        <a-avatar style="vertical-align: top">
+          <img
+            src="../../assets/imgs/logo.jpg"
+            style="height: 32px; width: 32px; position: absolute; left: -16px"
+          />
+        </a-avatar>
+        <a-button class="color51" style="padding: 0 5px" type="link">{{
+          info.curr.loginAcctName
+        }}</a-button>
         <!-- <a-button type="link" @click="layout">退出</a-button> -->
       </div>
     </div>
@@ -34,33 +42,50 @@
         :openKeys="openKeys"
         @openChange="openChange"
       >
-        <template v-for="(item) in menuList">
+        <template v-for="item in menuList">
           <template v-if="item.children && item.children.length > 0">
-            <a-sub-menu
-              :key="item.key"
-            >
-            <!-- v-if="submenuShow(item.permission, item.childrenPermission)" -->
+            <a-sub-menu :key="item.key">
+              <!-- v-if="submenuShow(item.permission, item.childrenPermission)" -->
               <span slot="title">
-                <img :src="require(`../../assets/images/${item.activeLogo}`)" alt class="white"  v-if="item.activeLogo" />
-                <img :src="require(`../../assets/images/${item.logo}`)" alt class="black"  v-if="item.logo" />
-                <span style="margin: 0 auto">{{item.title}}</span>
+                <img
+                  :src="require(`../../assets/images/${item.activeLogo}`)"
+                  alt
+                  class="white"
+                  v-if="item.activeLogo"
+                />
+                <img
+                  :src="require(`../../assets/images/${item.logo}`)"
+                  alt
+                  class="black"
+                  v-if="item.logo"
+                />
+                <span style="margin: 0 auto">{{ item.title }}</span>
               </span>
               <template v-for="it in item.children">
                 <a-menu-item
                   :key="it.key"
                   v-if="(info.curr.moduleIds || []).includes(it.permission)"
-                >{{it.title}}</a-menu-item>
+                  >{{ it.title }}</a-menu-item
+                >
               </template>
             </a-sub-menu>
           </template>
           <template v-else>
-            <a-menu-item
-              :key="item.key"
-            >
-            <!-- v-if="(info.curr.moduleIds || []).includes(item.permission) || item.permission === 'always'" -->
-              <img :src="require(`../../assets/images/${item.activeLogo}`)" alt class="white" v-if="item.activeLogo" />
-              <img :src="require(`../../assets/images/${item.logo}`)" alt class="black" v-if="item.logo"/>
-              <span style="margin: 0 auto">{{item.title}}</span>
+            <a-menu-item :key="item.key">
+              <!-- v-if="(info.curr.moduleIds || []).includes(item.permission) || item.permission === 'always'" -->
+              <img
+                :src="require(`../../assets/images/${item.activeLogo}`)"
+                alt
+                class="white"
+                v-if="item.activeLogo"
+              />
+              <img
+                :src="require(`../../assets/images/${item.logo}`)"
+                alt
+                class="black"
+                v-if="item.logo"
+              />
+              <span style="margin: 0 auto">{{ item.title }}</span>
             </a-menu-item>
           </template>
         </template>
@@ -68,13 +93,13 @@
     </div>
     <!-- <div class="layout-main" :style="info.curr.entpIsFormal || info.curr.entpIsAuth ? '' : 'margin-left: 0'"> 0-->
     <div class="layout-main">
-      <div class="page-title" v-if="isBack||breadTitle">
+      <div class="page-title" v-if="isBack || breadTitle">
         <a-button type="link" v-if="isBack" @click="$router.go(-1)">
           <a-icon type="left" />
-          <span style="margin-left:2px;">返回</span>
+          <span style="margin-left: 2px">返回</span>
         </a-button>
-        <span v-if="isBack" style="font-size: 14px;margin-right: 15px">|</span>
-        <span style="font-size: 14px">{{breadTitle}}</span>
+        <span v-if="isBack" style="font-size: 14px; margin-right: 15px">|</span>
+        <span style="font-size: 14px">{{ breadTitle }}</span>
       </div>
       <router-view />
     </div>
@@ -90,20 +115,20 @@ export default {
       breadTitle: "",
       info: {
         curr: {},
-        entps: []
+        entps: [],
       },
       selectedEntpId: "",
       selectedKeys: "/home",
-      openKeys: []
+      openKeys: [],
     };
   },
   computed: {
     entpName() {
-      const targetObj = this.info.entps.find(item => {
+      const targetObj = this.info.entps.find((item) => {
         return item.entpId === this.selectedEntpId;
       });
       return (targetObj || {}).entpName;
-    }
+    },
   },
   watch: {
     $route(to, from) {
@@ -111,13 +136,13 @@ export default {
       this.isBack = meta.isBack;
       this.breadTitle = meta.breadTitle;
       this.selectedKeys = this.$route.path;
-    }
+    },
   },
   created() {
     const meta = this.$route.meta;
     this.isBack = meta.isBack;
     this.breadTitle = meta.breadTitle;
-    this.$bus.$on("changeBreadTitle", msg => {
+    this.$bus.$on("changeBreadTitle", (msg) => {
       this.breadTitle = msg;
     });
     // this.api.login02({}).then(res => {
@@ -131,21 +156,21 @@ export default {
   },
   methods: {
     changeEntp({ key }) {
-      if(key !== this.selectedEntpId) {
-        this.selectedEntpId = key
-        this.api.login02({entpId: this.selectedEntpId}).then(res => {
-          window.location.reload()
+      if (key !== this.selectedEntpId) {
+        this.selectedEntpId = key;
+        this.api.login02({ entpId: this.selectedEntpId }).then((res) => {
+          window.location.reload();
         });
       }
     },
     layout() {
-      this.api.Q0004().then(res => {
+      this.api.Q0004().then((res) => {
         this.$router.push("/login");
       });
     },
     handleClick(e) {
       this.$router.push({
-        path: e.key
+        path: e.key,
       });
       this.selectedKeys = e.key;
     },
@@ -180,7 +205,7 @@ export default {
     //   });
     //   return permissionShow && childrenPermissionShow;
     // }
-  }
+  },
 };
 </script>
 <style lang="less" scoped>
