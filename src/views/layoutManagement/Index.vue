@@ -2,7 +2,7 @@
   <div>
     <div class="layout-header">
       <div class="layout-header-logo">
-        <img src="../../assets/images/login-bg.png" />
+        <!-- <img src="../../assets/images/login-bg.png" /> -->
       </div>
       <div class="layout-header-right">
         <!-- <template v-if="info.curr.entpIsFormal || info.curr.entpIsAuth">
