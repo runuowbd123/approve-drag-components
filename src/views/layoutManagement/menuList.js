@@ -1,5 +1,9 @@
 const menuList = [
   {
+    key: "/sku",
+    title: 'sku算法-商品多规格',
+  },
+  {
     key: "/formdesign",
     title: '表单设计',
   },

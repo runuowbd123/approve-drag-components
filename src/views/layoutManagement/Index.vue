@@ -118,7 +118,7 @@ export default {
         entps: [],
       },
       selectedEntpId: "",
-      selectedKeys: "/home",
+      selectedKeys: "/sku",
       openKeys: [],
     };
   },
