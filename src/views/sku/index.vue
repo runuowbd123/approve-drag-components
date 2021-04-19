@@ -113,7 +113,7 @@
             </a-col>
           </a-row>
         </div>
-        <a-button @click="addStandards">添加规格</a-button>
+        <a-button @click="addStandards" type="primary">添加规格</a-button>
       </div>
       <div class="goods">
         <a-table
