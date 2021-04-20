@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div>
+    <a-spin :spinning="loading">
+      <div>
       <a-button @click="create" :disabled="connected">开始建立websocket</a-button>
     </div>
     <div class="chatList" id="chatList">
@@ -50,6 +51,7 @@
           />
       </div>
     </div>
+    </a-spin>
   </div>
 </template>
 
@@ -63,6 +65,7 @@ export default {
   name: "",
   data() {
     return {
+      loading: false,
       connected: false,
       chatList: [],
       input: "",
@@ -83,8 +86,8 @@ export default {
   },
   methods: {
     create() {
+      this.loading = true;
       createSocket("wss://echo.websocket.org", this.connect);
-
       window.addEventListener("onmessageWS", this.getData);
     },
     connect() {
@@ -92,6 +95,7 @@ export default {
       console.log("wesocket建立连接");
       this.$message.success("wesocket建立连接");
       this.connected = true;
+      this.loading = false;
     },
     getData(e) {
       console.log(e);
