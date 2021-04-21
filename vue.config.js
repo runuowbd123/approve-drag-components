@@ -21,11 +21,11 @@ module.exports = {
             }
         }
     },
-    configureWebpack: {
-      externals: {
-        'AMap': 'AMap' // 高德地图配置
-      }
-    },
+    // configureWebpack: {
+    //   externals: {
+    //     'AMap': 'AMap' // 高德地图配置
+    //   }
+    // },
     chainWebpack: config => { // 配置路径
         config.resolve.alias
             .set("@img", resolve("src/assets/img"))
